@@ -1,6 +1,24 @@
 import { useState } from 'react';
 import './index.css';
 
+/**
+ * 获取当月有多少天
+ */
+const daysOfMonth = (year: number, month: number) => {
+  /**
+   * new Date(year, month, 0) 当 date 传 0 的时候，取到的是上个月的最后一天
+   * 所以这里 month + 1 传入下个月，而 date 传 0，最终取到的是这个月天数
+   */
+  return new Date(year, month + 1, 0).getDate();
+};
+
+/**
+ * 计算当前月的第一天是星期几
+ */
+const firstDayOfMonth = (year: number, month: number) => {
+  return new Date(year, month, 1).getDay();
+};
+
 export function Calendar() {
   const [date, setDate] = useState(new Date());
 
@@ -10,6 +28,28 @@ export function Calendar() {
 
   const handleNextMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() + 1, 1));
+  };
+
+  const renderDates = () => {
+    const days = [];
+    const daysCount = daysOfMonth(date.getFullYear(), date.getMonth());
+    const firstDay = firstDayOfMonth(date.getFullYear(), date.getMonth());
+
+    // 当月第一天之前的日期需要用 empty 填充，将一周补完即可
+    for (let i = 0; i < firstDay; i++) {
+      days.push(<div key={`empty-${i}`} className='empty'></div>);
+    }
+
+    // 将当月日期填入
+    for (let i = 1; i <= daysCount; i++) {
+      days.push(
+        <div key={i} className='day'>
+          {i}
+        </div>
+      );
+    }
+
+    return days;
   };
 
   return (
@@ -29,39 +69,7 @@ export function Calendar() {
         <div className='day'>四</div>
         <div className='day'>五</div>
         <div className='day'>六</div>
-        <div className='empty'></div>
-        <div className='empty'></div>
-        <div className='day'>1</div>
-        <div className='day'>2</div>
-        <div className='day'>3</div>
-        <div className='day'>4</div>
-        <div className='day'>5</div>
-        <div className='day'>6</div>
-        <div className='day'>7</div>
-        <div className='day'>8</div>
-        <div className='day'>9</div>
-        <div className='day'>10</div>
-        <div className='day'>11</div>
-        <div className='day'>12</div>
-        <div className='day'>13</div>
-        <div className='day'>14</div>
-        <div className='day'>15</div>
-        <div className='day'>16</div>
-        <div className='day'>17</div>
-        <div className='day'>18</div>
-        <div className='day'>19</div>
-        <div className='day'>20</div>
-        <div className='day'>21</div>
-        <div className='day'>22</div>
-        <div className='day'>23</div>
-        <div className='day'>24</div>
-        <div className='day'>25</div>
-        <div className='day'>26</div>
-        <div className='day'>27</div>
-        <div className='day'>28</div>
-        <div className='day'>29</div>
-        <div className='day'>30</div>
-        <div className='day'>31</div>
+        {renderDates()}
       </div>
     </div>
   );
