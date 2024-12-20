@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import './index.css';
 import { daysOfMonth, firstDayOfMonth } from './helper';
 
-export function Calendar() {
-  const [date, setDate] = useState(new Date());
+interface ICalendarProps {
+  defaultValue?: Date;
+  onChange?: (date: Date) => void;
+}
+
+export const Calendar: FC<ICalendarProps> = ({
+  defaultValue = new Date(),
+  onChange,
+}) => {
+  const [date, setDate] = useState(defaultValue);
 
   const handlePrevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
@@ -25,11 +33,24 @@ export function Calendar() {
 
     // 将当月日期填入
     for (let i = 1; i <= daysCount; i++) {
-      days.push(
-        <div key={i} className='day'>
-          {i}
-        </div>
-      );
+      const clickHandler = () => {
+        const curDate = new Date(date.getFullYear(), date.getMonth(), i);
+        setDate(curDate);
+        onChange?.(curDate);
+      };
+      if (i === date.getDate()) {
+        days.push(
+          <div key={i} className='day selected' onClick={() => clickHandler()}>
+            {i}
+          </div>
+        );
+      } else {
+        days.push(
+          <div key={i} className='day' onClick={() => clickHandler()}>
+            {i}
+          </div>
+        );
+      }
     }
 
     return days;
@@ -56,4 +77,4 @@ export function Calendar() {
       </div>
     </div>
   );
-}
+};
