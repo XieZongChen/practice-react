@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import './index.css';
 import { daysOfMonth, firstDayOfMonth } from './helper';
 
@@ -7,11 +7,27 @@ interface ICalendarProps {
   onChange?: (date: Date) => void;
 }
 
-export const Calendar: FC<ICalendarProps> = ({
-  defaultValue = new Date(),
-  onChange,
-}) => {
+interface ICalendarRef {
+  getDate: () => Date;
+  setDate: (date: Date) => void;
+}
+
+const InternalCalendar: React.ForwardRefRenderFunction<
+  ICalendarRef,
+  ICalendarProps
+> = ({ defaultValue = new Date(), onChange }, ref) => {
   const [date, setDate] = useState(defaultValue);
+
+  useImperativeHandle(ref, () => {
+    return {
+      getDate() {
+        return date;
+      },
+      setDate(date: Date) {
+        setDate(date);
+      },
+    };
+  });
 
   const handlePrevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
@@ -78,3 +94,5 @@ export const Calendar: FC<ICalendarProps> = ({
     </div>
   );
 };
+
+export const Calendar = forwardRef(InternalCalendar);
