@@ -25,6 +25,25 @@ function getAllDays(date: Dayjs) {
       currentMonth: calcDate.month() === date.month(), // 记录是否是当前月
     };
   }
+
+  return daysInfo;
+}
+
+function renderDays(days: Array<{ date: Dayjs; currentMonth: boolean }>) {
+  const rows = [];
+  for (let i = 0; i < 6; i++) {
+    const row = [];
+    for (let j = 0; j < 7; j++) {
+      const item = days[i * 7 + j];
+      row[j] = (
+        <div className='calendar-month-body-cell'>{item.date.date()}</div>
+      );
+    }
+    rows.push(row);
+  }
+  return rows.map((row) => (
+    <div className='calendar-month-body-row'>{row}</div>
+  ));
 }
 
 interface MonthCalendarProps extends CalendarProps {}
@@ -43,6 +62,7 @@ function MonthCalendar(props: MonthCalendarProps) {
           </div>
         ))}
       </div>
+      <div className='calendar-month-body'>{renderDays(allDays)}</div>
     </div>
   );
 }
