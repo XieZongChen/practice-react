@@ -36,7 +36,14 @@ function renderDays(days: Array<{ date: Dayjs; currentMonth: boolean }>) {
     for (let j = 0; j < 7; j++) {
       const item = days[i * 7 + j];
       row[j] = (
-        <div className='calendar-month-body-cell'>{item.date.date()}</div>
+        <div
+          className={
+            'calendar-month-body-cell ' +
+            (item.currentMonth ? 'calendar-month-body-cell-current' : '')
+          }
+        >
+          {item.date.date()}
+        </div>
       );
     }
     rows.push(row);
