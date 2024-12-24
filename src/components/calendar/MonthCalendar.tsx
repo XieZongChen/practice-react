@@ -1,5 +1,6 @@
-import { Dayjs } from 'dayjs';
 import { useContext } from 'react';
+import { Dayjs } from 'dayjs';
+import cs from 'classnames';
 import LocaleContext from './LocaleContext';
 import allLocales from './locale';
 import { CalendarProps } from '.';
@@ -35,7 +36,8 @@ function getAllDays(date: Dayjs) {
 function renderDays(
   days: Array<{ date: Dayjs; currentMonth: boolean }>,
   dateRender: MonthCalendarProps['dateRender'],
-  dateInnerContent: MonthCalendarProps['dateInnerContent']
+  dateInnerContent: MonthCalendarProps['dateInnerContent'],
+  value: Dayjs
 ) {
   const rows = [];
   for (let i = 0; i < 6; i++) {
@@ -53,10 +55,17 @@ function renderDays(
             dateRender(item.date)
           ) : (
             <div className='calendar-month-body-cell-date'>
-              <div className='calendar-month-body-cell-date-value'>
+              <div
+                className={cs(
+                  'calendar-month-body-cell-date-value',
+                  value.format('YYYY-MM-DD') === item.date.format('YYYY-MM-DD')
+                    ? 'calendar-month-body-cell-date-selected'
+                    : ''
+                )}
+              >
                 {item.date.date()}
               </div>
-              <div className='calendar-month-body-cell-date-content'>
+              <div className='calendar-month-cell-body-date-content'>
                 {dateInnerContent?.(item.date)}
               </div>
             </div>
@@ -75,7 +84,7 @@ interface MonthCalendarProps extends CalendarProps {}
 
 function MonthCalendar(props: MonthCalendarProps) {
   const localeContext = useContext(LocaleContext);
-  const { dateRender, dateInnerContent } = props;
+  const { value, dateRender, dateInnerContent } = props;
 
   const CalendarLocale = allLocales[localeContext.locale];
 
@@ -101,7 +110,7 @@ function MonthCalendar(props: MonthCalendarProps) {
         ))}
       </div>
       <div className='calendar-month-body'>
-        {renderDays(allDays, dateRender, dateInnerContent)}
+        {renderDays(allDays, dateRender, dateInnerContent, value)}
       </div>
     </div>
   );
