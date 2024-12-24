@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode, useState } from 'react';
 import { Dayjs } from 'dayjs';
 import cs from 'classnames';
 import LocaleContext from './LocaleContext';
@@ -20,14 +20,24 @@ export interface CalendarProps {
 }
 
 function Calendar(props: CalendarProps) {
-  const { className, style, locale } = props;
+  const { className, style, locale, value, onChange } = props;
   const mergedClassNames = cs('calendar', className);
+
+  const [curValue, setCurValue] = useState<Dayjs>(value);
+  function selectHandler(date: Dayjs) {
+    setCurValue(date);
+    onChange?.(date);
+  }
 
   return (
     <LocaleContext.Provider value={{ locale: locale || navigator.language }}>
       <div className={mergedClassNames} style={style}>
         <Header />
-        <MonthCalendar {...props} />
+        <MonthCalendar
+          {...props}
+          value={curValue}
+          selectHandler={selectHandler}
+        />
       </div>
     </LocaleContext.Provider>
   );
