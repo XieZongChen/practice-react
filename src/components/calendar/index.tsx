@@ -1,9 +1,10 @@
 import { CSSProperties, ReactNode } from 'react';
 import { Dayjs } from 'dayjs';
 import cs from 'classnames';
+import LocaleContext from './LocaleContext';
+import Header from './Header';
 import MonthCalendar from './MonthCalendar';
 import './index.scss';
-import Header from './Header';
 
 export interface CalendarProps {
   value: Dayjs;
@@ -19,14 +20,16 @@ export interface CalendarProps {
 }
 
 function Calendar(props: CalendarProps) {
-  const { className, style } = props;
+  const { className, style, locale } = props;
   const mergedClassNames = cs('calendar', className);
-  
+
   return (
-    <div className={mergedClassNames} style={style}>
-      <Header />
-      <MonthCalendar {...props} />
-    </div>
+    <LocaleContext.Provider value={{ locale: locale || navigator.language }}>
+      <div className={mergedClassNames} style={style}>
+        <Header />
+        <MonthCalendar {...props} />
+      </div>
+    </LocaleContext.Provider>
   );
 }
 
