@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode, useState } from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import cs from 'classnames';
 import LocaleContext from './LocaleContext';
 import Header from './Header';
@@ -30,6 +30,12 @@ function Calendar(props: CalendarProps) {
   function nextMonthHandler() {
     setCurMonth(curMonth.add(1, 'month'));
   }
+  function todayHandler() {
+    const date = dayjs(Date.now());
+    setCurValue(date);
+    setCurMonth(date);
+    onChange?.(date);
+  }
 
   const [curValue, setCurValue] = useState<Dayjs>(value);
   function selectHandler(date: Dayjs) {
@@ -44,6 +50,7 @@ function Calendar(props: CalendarProps) {
           curMonth={curMonth}
           prevMonthHandler={prevMonthHandler}
           nextMonthHandler={nextMonthHandler}
+          todayHandler={todayHandler}
         />
         <MonthCalendar
           {...props}
