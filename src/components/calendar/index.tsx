@@ -40,6 +40,7 @@ function Calendar(props: CalendarProps) {
   const [curValue, setCurValue] = useState<Dayjs>(value);
   function selectHandler(date: Dayjs) {
     setCurValue(date);
+    setCurMonth(date);
     onChange?.(date);
   }
 
