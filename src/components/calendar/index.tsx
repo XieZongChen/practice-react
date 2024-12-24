@@ -1,13 +1,15 @@
 import { CSSProperties, ReactNode, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import cs from 'classnames';
+import { useControllableValue } from 'ahooks';
 import LocaleContext from './LocaleContext';
 import Header from './Header';
 import MonthCalendar from './MonthCalendar';
 import './index.scss';
 
 export interface CalendarProps {
-  value: Dayjs;
+  value?: Dayjs;
+  defaultValue?: Dayjs;
   style?: CSSProperties;
   className?: string | string[];
   // 定制日期显示，会完全覆盖日期单元格
@@ -20,10 +22,17 @@ export interface CalendarProps {
 }
 
 function Calendar(props: CalendarProps) {
-  const { className, style, locale, value, onChange } = props;
+  const { className, style, locale } = props;
   const mergedClassNames = cs('calendar', className);
 
-  const [curMonth, setCurMonth] = useState<Dayjs>(value);
+  const [curValue, setCurValue] = useControllableValue<Dayjs>(props, {
+    defaultValue: dayjs(),
+  });
+  function selectHandler(date: Dayjs) {
+    changeDate(date);
+  }
+
+  const [curMonth, setCurMonth] = useState<Dayjs>(curValue);
   function prevMonthHandler() {
     setCurMonth(curMonth.subtract(1, 'month'));
   }
@@ -32,16 +41,13 @@ function Calendar(props: CalendarProps) {
   }
   function todayHandler() {
     const date = dayjs(Date.now());
-    setCurValue(date);
-    setCurMonth(date);
-    onChange?.(date);
+    changeDate(date);
   }
 
-  const [curValue, setCurValue] = useState<Dayjs>(value);
-  function selectHandler(date: Dayjs) {
+  function changeDate(date: Dayjs) {
+    // 注意：ahooks 的 useControllableValue 在 setCurValue 触发时，会自动调用 onChange，所以这里不用处理 onChange
     setCurValue(date);
     setCurMonth(date);
-    onChange?.(date);
   }
 
   return (
