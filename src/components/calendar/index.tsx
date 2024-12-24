@@ -23,6 +23,14 @@ function Calendar(props: CalendarProps) {
   const { className, style, locale, value, onChange } = props;
   const mergedClassNames = cs('calendar', className);
 
+  const [curMonth, setCurMonth] = useState<Dayjs>(value);
+  function prevMonthHandler() {
+    setCurMonth(curMonth.subtract(1, 'month'));
+  }
+  function nextMonthHandler() {
+    setCurMonth(curMonth.add(1, 'month'));
+  }
+
   const [curValue, setCurValue] = useState<Dayjs>(value);
   function selectHandler(date: Dayjs) {
     setCurValue(date);
@@ -32,10 +40,15 @@ function Calendar(props: CalendarProps) {
   return (
     <LocaleContext.Provider value={{ locale: locale || navigator.language }}>
       <div className={mergedClassNames} style={style}>
-        <Header />
+        <Header
+          curMonth={curMonth}
+          prevMonthHandler={prevMonthHandler}
+          nextMonthHandler={nextMonthHandler}
+        />
         <MonthCalendar
           {...props}
           value={curValue}
+          curMonth={curMonth}
           selectHandler={selectHandler}
         />
       </div>

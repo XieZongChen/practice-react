@@ -82,27 +82,28 @@ function renderDays(
   ));
 }
 
+const weekList = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+];
+
 interface MonthCalendarProps extends CalendarProps {
+  curMonth: Dayjs;
   selectHandler?: (date: Dayjs) => void;
 }
 
 function MonthCalendar(props: MonthCalendarProps) {
   const localeContext = useContext(LocaleContext);
-  const { value, dateRender, dateInnerContent, selectHandler } = props;
-
   const CalendarLocale = allLocales[localeContext.locale];
+  const { value, curMonth, dateRender, dateInnerContent, selectHandler } =
+    props;
 
-  const weekList = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ];
-
-  const allDays = getAllDays(props.value);
+  const allDays = getAllDays(curMonth);
 
   return (
     <div className='calendar-month'>
