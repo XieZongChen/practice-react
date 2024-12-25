@@ -3,7 +3,7 @@ import Calendar, { CalendarProps } from '@/components/calendar';
 import dayjs from 'dayjs';
 
 const meta = {
-  title: '日历组件',
+  title: 'components/日历',
   component: Calendar,
   parameters: {
     layout: 'centered',
