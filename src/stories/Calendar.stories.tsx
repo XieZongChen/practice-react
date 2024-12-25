@@ -13,6 +13,13 @@ const meta = {
     value: {
       control: 'date',
     },
+    locale: {
+      control: 'select',
+      options: ['zh-CN', 'en-US'],
+    },
+  },
+  args: {
+    locale: 'zh-CN',
   },
 } satisfies Meta<typeof Calendar>;
 
@@ -32,7 +39,7 @@ export const Value: Story = {
   args: {
     value: dayjs('2023-11-08'),
   },
-  render: renderCalendar
+  render: renderCalendar,
 };
 
 export const DateRender: Story = {
@@ -42,7 +49,7 @@ export const DateRender: Story = {
       return <div>日期{currentDate.date()}</div>;
     },
   },
-  render: renderCalendar
+  render: renderCalendar,
 };
 
 export const DateInnerContent: Story = {
@@ -52,7 +59,7 @@ export const DateInnerContent: Story = {
       return <div>日期{currentDate.date()}</div>;
     },
   },
-  render: renderCalendar
+  render: renderCalendar,
 };
 
 export const Locale: Story = {
@@ -60,5 +67,5 @@ export const Locale: Story = {
     value: dayjs('2023-11-08'),
     locale: 'en-US',
   },
-  render: renderCalendar
+  render: renderCalendar,
 };

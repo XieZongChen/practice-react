@@ -8,16 +8,37 @@ import MonthCalendar from './MonthCalendar';
 import './index.scss';
 
 export interface CalendarProps {
+  /**
+   * 受控传值
+   */
   value?: Dayjs;
+  /**
+   * 非受控传值
+   */
   defaultValue?: Dayjs;
+  /**
+   * 样式
+   */
   style?: CSSProperties;
+  /**
+   * 类名
+   */
   className?: string | string[];
-  // 定制日期显示，会完全覆盖日期单元格
-  dateRender?: (currentDate: Dayjs) => ReactNode;
-  // 定制日期单元格，内容会被添加到单元格内，只在全屏日历模式下生效。
-  dateInnerContent?: (currentDate: Dayjs) => ReactNode;
-  // 国际化相关
+  /**
+   * 国际化
+   */
   locale?: string;
+  /**
+   * 自定义日期显示，会完全覆盖日期单元格
+   */
+  dateRender?: (currentDate: Dayjs) => ReactNode;
+  /**
+   * 自定义日期单元格，内容会被添加到单元格内，只在全屏日历模式下生效。
+   */
+  dateInnerContent?: (currentDate: Dayjs) => ReactNode;
+  /**
+   * 更改日期后的回调事件
+   */
   onChange?: (date: Dayjs) => void;
 }
 
