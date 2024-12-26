@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, forwardRef } from 'react';
+import cs from 'classnames';
 
 type BaseIconProps = {
   /**
@@ -47,10 +48,19 @@ export const Icon = forwardRef<SVGSVGElement, PropsWithChildren<IconProps>>(
 
     const [width, height] = getSize(size);
 
+    const _className = cs(
+      'icon',
+      {
+        'icon-spin': spin,
+      },
+      className
+    );
+
     return (
       // currentColor 会默认使用继承的 color 的值
       <svg
         ref={ref}
+        className={_className}
         style={style}
         width={width}
         height={height}
