@@ -23,6 +23,17 @@ export type IconProps = BaseIconProps &
   // 因为本组件是对 svg 的封装，所以也接受所有 svg 的属性，透传给内部的 svg
   Omit<React.SVGAttributes<SVGElement>, keyof BaseIconProps>;
 
+export const getSize = (size: IconProps['size']) => {
+  if (Array.isArray(size) && size.length === 2) {
+    return size as string[];
+  }
+
+  const width = (size as string) || '1em';
+  const height = (size as string) || '1em';
+
+  return [width, height];
+};
+
 export const Icon = forwardRef<SVGSVGElement, PropsWithChildren<IconProps>>(
   (props, ref) => {
     const {
@@ -34,9 +45,18 @@ export const Icon = forwardRef<SVGSVGElement, PropsWithChildren<IconProps>>(
       ...rest
     } = props;
 
+    const [width, height] = getSize(size);
+
     return (
       // currentColor 会默认使用继承的 color 的值
-      <svg ref={ref} style={style} fill='currentColor' {...rest}>
+      <svg
+        ref={ref}
+        style={style}
+        width={width}
+        height={height}
+        fill='currentColor'
+        {...rest}
+      >
         {children}
       </svg>
     );
