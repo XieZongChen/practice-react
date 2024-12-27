@@ -64,9 +64,16 @@ const Space: React.FC<SpaceProps> = (props) => {
     const key = (child && child.key) || `space-item-${i}`;
 
     return (
-      <div className='space-item' key={key}>
-        {child}
-      </div>
+      <>
+        <div className='space-item' key={key}>
+          {child}
+        </div>
+        {i < childNodes.length && split && (
+          <span className={`${className}-split`} style={style}>
+            {split}
+          </span>
+        )}
+      </>
     );
   });
 
