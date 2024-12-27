@@ -70,7 +70,8 @@ const Space: React.FC<SpaceProps> = (props) => {
         <div className='space-item' key={key}>
           {child}
         </div>
-        {i < childNodes.length && split && (
+        {/* 最后一个元素后面不加 split，所以需要 i < childNodes.length - 1 */}
+        {i < childNodes.length - 1 && split && (
           <span className={`${className}-split`} style={style}>
             {split}
           </span>
