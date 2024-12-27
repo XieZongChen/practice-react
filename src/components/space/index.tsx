@@ -1,6 +1,7 @@
 import React from 'react';
 import cs from 'classnames';
 import './index.scss';
+import { ConfigContext } from './ConfigProvider';
 
 const spaceSize = {
   small: 8,
@@ -46,11 +47,12 @@ export interface SpaceProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Space: React.FC<SpaceProps> = (props) => {
+  const { space } = React.useContext(ConfigContext);
   const {
     className,
     style,
     children,
-    size = 'small',
+    size = space?.size || 'small',
     direction = 'horizontal',
     align,
     split,
