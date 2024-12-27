@@ -1,5 +1,6 @@
 import React from 'react';
 import cs from 'classnames';
+import './index.scss';
 
 export type SizeType = 'small' | 'middle' | 'large' | number | undefined;
 
