@@ -2,6 +2,16 @@ import React from 'react';
 import cs from 'classnames';
 import './index.scss';
 
+const spaceSize = {
+  small: 8,
+  middle: 16,
+  large: 24,
+};
+
+function getNumberSize(size: SizeType) {
+  return typeof size === 'string' ? spaceSize[size] : size || 0;
+}
+
 export type SizeType = 'small' | 'middle' | 'large' | number | undefined;
 
 export interface SpaceProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -71,8 +81,29 @@ const Space: React.FC<SpaceProps> = (props) => {
     className
   );
 
+  const otherStyles: React.CSSProperties = {};
+  const [horizontalSize, verticalSize] = React.useMemo(
+    () =>
+      ((Array.isArray(size) ? size : [size, size]) as [SizeType, SizeType]).map(
+        (item) => getNumberSize(item)
+      ),
+    [size]
+  );
+  otherStyles.columnGap = horizontalSize;
+  otherStyles.rowGap = verticalSize;
+  if (wrap) {
+    otherStyles.flexWrap = 'wrap';
+  }
+
   return (
-    <div className={cn} style={style} {...otherProps}>
+    <div
+      className={cn}
+      style={{
+        ...otherStyles,
+        ...style,
+      }}
+      {...otherProps}
+    >
       {nodes}
     </div>
   );
