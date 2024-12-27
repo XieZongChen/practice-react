@@ -3,3 +3,26 @@ import { Meta } from "@storybook/blocks";
 <Meta title="components/Space/Utils" />
 
 # 其他工具
+
+## ConfigProvider
+
+方便一次修改多个 space 的 size
+
+```jsx
+function App() {
+  return (
+    <ConfigProvider space={{ size: 20 }}>
+      <Space direction='horizontal'>
+        <div className='box'></div>
+        <div className='box'></div>
+        <div className='box'></div>
+      </Space>
+      <Space direction='vertical'>
+        <div className='box'></div>
+        <div className='box'></div>
+        <div className='box'></div>
+      </Space>
+    </ConfigProvider>
+  );
+}
+```
