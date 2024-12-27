@@ -1,4 +1,5 @@
 import React from 'react';
+import cs from 'classnames';
 
 export type SizeType = 'small' | 'middle' | 'large' | number | undefined;
 
@@ -34,7 +35,17 @@ export interface SpaceProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Space: React.FC<SpaceProps> = (props) => {
-  const { className, style, ...otherProps } = props;
+  const {
+    className,
+    style,
+    children,
+    size = 'small',
+    direction = 'horizontal',
+    align,
+    split,
+    wrap = false,
+    ...otherProps
+  } = props;
 
   // 想要处理 children，必须用 React.Children 处理一下
   const childNodes = React.Children.toArray(props.children);
@@ -48,8 +59,19 @@ const Space: React.FC<SpaceProps> = (props) => {
     );
   });
 
+  const mergedAlign =
+    direction === 'horizontal' && align === undefined ? 'center' : align;
+  const cn = cs(
+    'space',
+    `space-${direction}`,
+    {
+      [`space-align-${mergedAlign}`]: mergedAlign,
+    },
+    className
+  );
+
   return (
-    <div className={className} style={style} {...otherProps}>
+    <div className={cn} style={style} {...otherProps}>
       {nodes}
     </div>
   );
