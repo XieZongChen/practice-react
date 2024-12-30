@@ -34,6 +34,5 @@ export default function useMutateObserver(
       // disconnect 停止接收新的通知
       instance?.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options, nodeOrList]);
+  }, [options, nodeOrList, callback]);
 }

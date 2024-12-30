@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import useMutateObserver from './useMutateObserver';
 
 export interface MutationObserverProps {
@@ -14,7 +14,10 @@ const MutateObserver: React.FC<MutationObserverProps> = (props) => {
 
   const [target, setTarget] = React.useState<HTMLElement>();
 
-  useMutateObserver(target!, onMutate, options);
+  // useMutateObserver 会将第二个参数放入依赖，所以这里使用 useCallback 包一层，从试外层 onMutate 传入时不用特殊处理
+  const _onMutate = useCallback(onMutate, [onMutate])
+
+  useMutateObserver(target!, _onMutate, options);
 
   useLayoutEffect(() => {
     /**
