@@ -24,6 +24,9 @@ export interface PortalProps {
    * 目标 dom 节点，可以传一个 HTMLElement 或选择器，默认为 body
    */
   attach?: HTMLElement | string;
+  /**
+   * 渲染节点
+   */
   children: React.ReactNode;
 }
 
