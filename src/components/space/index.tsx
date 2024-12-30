@@ -1,7 +1,7 @@
 import React from 'react';
 import cs from 'classnames';
 import './index.scss';
-import { ConfigContext } from './ConfigProvider';
+import { ConfigContext } from '@/components/Space/ConfigProvider';
 
 const spaceSize = {
   small: 8,

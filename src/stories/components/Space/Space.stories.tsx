@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Space, { SpaceProps } from '@/components/space';
+import Space, { SpaceProps } from '@/components/Space';
 
 const demoBoxStyle = {
   width: '100px',

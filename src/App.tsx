@@ -1,5 +1,5 @@
-import Space from './components/space';
-import { ConfigProvider } from './components/space/ConfigProvider';
+import Space from '@/components/Space';
+import { ConfigProvider } from '@/components/Space/ConfigProvider';
 
 function App() {
   return (

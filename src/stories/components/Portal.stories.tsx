@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Portal, { PortalProps } from '@/components/portal';
+import Portal, { PortalProps } from '@/components/Portal';
 
 const demoBoxStyle: React.CSSProperties = {
   width: '100px',
