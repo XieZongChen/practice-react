@@ -1,4 +1,5 @@
-import { useRef, PropsWithChildren, CSSProperties, FC } from 'react';
+import { useRef, PropsWithChildren, CSSProperties, FC, useCallback, useEffect } from 'react';
+import useWatermark from './useWatermark';
 
 export interface WatermarkProps extends PropsWithChildren {
   /**
@@ -72,6 +73,55 @@ const Watermark: FC<WatermarkProps> = (props) => {
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const getContainer = useCallback(() => {
+    return props.getContainer ? props.getContainer() : containerRef.current!;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef.current, props?.getContainer]);
+
+  const { generateWatermark } = useWatermark({
+    zIndex,
+    width,
+    height,
+    rotate,
+    image,
+    content,
+    fontStyle,
+    gap,
+    offset,
+    getContainer,
+  });
+
+  useEffect(() => {
+    generateWatermark({
+      zIndex,
+      width,
+      height,
+      rotate,
+      image,
+      content,
+      fontStyle,
+      gap,
+      offset,
+      getContainer,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    zIndex,
+    width,
+    height,
+    rotate,
+    image,
+    content,
+    // 避免每次都变，对象参数（fontSize）、数组参数（gap、offset）用 JSON.stringify 序列化后再放到 deps 数组里
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(props.fontStyle),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(props.gap),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(props.offset),
+    getContainer,
+  ]);
 
   return props.children ? (
     <div className={className} style={style} ref={containerRef}>
