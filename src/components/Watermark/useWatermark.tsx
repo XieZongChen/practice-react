@@ -27,6 +27,8 @@ const toNumber = (value?: string | number, defaultValue?: number) => {
   return isNumber(numberVal) ? numberVal : defaultValue;
 };
 
+
+
 const defaultOptions = {
   rotate: -20,
   zIndex: 1,
@@ -111,7 +113,41 @@ const getCanvasData = async (
     ctx.rotate(RotateAngle);
   };
 
-  const drawText = () => {};
+  const drawText = () => {
+    const { fontSize, color, fontWeight, fontFamily } = fontStyle;
+    const realFontSize = toNumber(fontSize, 0) || fontStyle.fontSize;
+
+    ctx.font = `${fontWeight} ${realFontSize}px ${fontFamily}`;
+
+    // 如果没有传入 width、height 就自己计算一个
+    const measureSize = measureTextSize(ctx, [...content], rotate);
+    const width = options.width || measureSize.width;
+    const height = options.height || measureSize.height;
+
+    configCanvas({ width, height });
+
+    ctx.fillStyle = color!;
+    ctx.font = `${fontWeight} ${realFontSize}px ${fontFamily}`;
+    ctx.textBaseline = 'top'; // 设置 textBaseline 为 top，顶部对齐
+
+    // 依次绘制文字
+    [...content].forEach((item, index) => {
+      const { height: lineHeight, width: lineWidth } =
+        measureSize.lineSize[index];
+
+      const xStartPoint = -lineWidth / 2;
+      const yStartPoint =
+        -(options.height || measureSize.originHeight) / 2 + lineHeight * index;
+
+      ctx.fillText(
+        item,
+        xStartPoint,
+        yStartPoint,
+        options.width || measureSize.originWidth
+      );
+    });
+    return Promise.resolve({ base64Url: canvas.toDataURL(), height, width });
+  };
 
   function drawImage() {
     return new Promise<{ width: number; height: number; base64Url: string }>(
@@ -120,7 +156,7 @@ const getCanvasData = async (
         // 安全相关设置
         img.crossOrigin = 'anonymous'; // 跨域的时候不携带 cookie
         img.referrerPolicy = 'no-referrer'; // 跨域的时候不携带 referer
-        img.src = image; 
+        img.src = image;
         img.onload = () => {
           // onload 时，对于没有设置 width 或 height 的情况，根据图片宽高比算出一个值
           let { width, height } = options;
