@@ -27,7 +27,51 @@ const toNumber = (value?: string | number, defaultValue?: number) => {
   return isNumber(numberVal) ? numberVal : defaultValue;
 };
 
+/**
+ * 计算文字相关尺寸
+ */
+const measureTextSize = (
+  ctx: CanvasRenderingContext2D,
+  content: string[],
+  rotate: number
+) => {
+  let width = 0;
+  let height = 0;
+  const lineSize: Array<{ width: number; height: number }> = [];
 
+  content.forEach((item) => {
+    const {
+      width: textWidth,
+      fontBoundingBoxAscent, // baseline 到顶部的距离
+      fontBoundingBoxDescent, // baseline 到底部的距离
+    } = ctx.measureText(item); // ctx.measureText 是用来测量文字尺寸的
+
+    // 行高计算
+    const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
+
+    if (textWidth > width) {
+      width = textWidth;
+    }
+
+    height += textHeight;
+    lineSize.push({ height: textHeight, width: textWidth });
+  });
+
+  const angle = (rotate * Math.PI) / 180;
+
+  return {
+    originWidth: width,
+    originHeight: height,
+    // 输出的宽高要考虑旋转
+    width: Math.ceil(
+      Math.abs(Math.sin(angle) * height) + Math.abs(Math.cos(angle) * width)
+    ),
+    height: Math.ceil(
+      Math.abs(Math.sin(angle) * width) + Math.abs(height * Math.cos(angle))
+    ),
+    lineSize,
+  };
+};
 
 const defaultOptions = {
   rotate: -20,
@@ -135,9 +179,9 @@ const getCanvasData = async (
       const { height: lineHeight, width: lineWidth } =
         measureSize.lineSize[index];
 
-      const xStartPoint = -lineWidth / 2;
+      const xStartPoint = -lineWidth / 2; // 在行宽的一半的地方开始绘制文字
       const yStartPoint =
-        -(options.height || measureSize.originHeight) / 2 + lineHeight * index;
+        -(options.height || measureSize.originHeight) / 2 + lineHeight * index; // 行内每个文字的位置是行高的一半 * index
 
       ctx.fillText(
         item,
