@@ -79,7 +79,36 @@ const getMergedOptions = (o: Partial<WatermarkOptions>) => {
  */
 const getCanvasData = async (
   options: Required<WatermarkOptions>
-): Promise<{ width: number; height: number; base64Url: string }> => {};
+): Promise<{ width: number; height: number; base64Url: string }> => {
+  const { rotate, image, content, fontStyle, gap } = options;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+
+  const ratio = window.devicePixelRatio;
+
+  const configCanvas = (size: { width: number; height: number }) => {
+    const canvasWidth = gap[0] + size.width;
+    const canvasHeight = gap[1] + size.height;
+
+    canvas.setAttribute('width', `${canvasWidth * ratio}px`);
+    canvas.setAttribute('height', `${canvasHeight * ratio}px`);
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
+
+    ctx.translate((canvasWidth * ratio) / 2, (canvasHeight * ratio) / 2);
+    ctx.scale(ratio, ratio);
+
+    const RotateAngle = (rotate * Math.PI) / 180;
+    ctx.rotate(RotateAngle);
+  };
+
+  const drawText = () => {};
+
+  function drawImage() {}
+
+  return image ? drawImage() : drawText();
+};
 
 export default function useWatermark(params: WatermarkOptions) {
   const [options, setOptions] = useState(params || {});
