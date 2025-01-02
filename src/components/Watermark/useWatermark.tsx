@@ -74,12 +74,53 @@ const getMergedOptions = (o: Partial<WatermarkOptions>) => {
   return mergedOptions;
 };
 
+/**
+ * 绘制水印方法
+ */
+const getCanvasData = async (
+  options: Required<WatermarkOptions>
+): Promise<{ width: number; height: number; base64Url: string }> => {};
+
 export default function useWatermark(params: WatermarkOptions) {
   const [options, setOptions] = useState(params || {});
 
   const mergedOptions = getMergedOptions(options);
+  const watermarkDiv = useRef<HTMLDivElement>(); // 水印 Dom
+  const container = mergedOptions.getContainer();
+  const { zIndex, gap } = mergedOptions;
 
-  function drawWatermark() {}
+  function drawWatermark() {
+    if (!container) {
+      return;
+    }
+
+    getCanvasData(mergedOptions).then(({ base64Url, width, height }) => {
+      // 注意 background-size 是 gap + width、gap + height 算出的
+      const wmStyle = `
+        width:100%;
+        height:100%;
+        position:absolute;
+        top:0;
+        left:0;
+        bottom:0;
+        right:0;
+        pointer-events: none;
+        z-index:${zIndex};
+        background-position: 0 0;
+        background-size:${gap[0] + width}px ${gap[1] + height}px;
+        background-repeat: repeat;
+        background-image:url(${base64Url})`;
+
+      if (!watermarkDiv.current) {
+        const div = document.createElement('div');
+        watermarkDiv.current = div;
+        container.append(div);
+        container.style.position = 'relative';
+      }
+
+      watermarkDiv.current?.setAttribute('style', wmStyle.trim());
+    });
+  }
 
   useEffect(() => {
     drawWatermark();
