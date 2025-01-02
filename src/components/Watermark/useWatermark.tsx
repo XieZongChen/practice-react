@@ -2,14 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { WatermarkProps } from '.';
 import { merge } from 'lodash-es';
 
-export type WatermarkOptions = Omit<WatermarkProps, 'className' | 'style' | 'children'>; 
+export type WatermarkOptions = Omit<
+  WatermarkProps,
+  'className' | 'style' | 'children'
+>;
 
 export function isNumber(obj: any): obj is number {
-  return Object.prototype.toString.call(obj) === '[object Number]' && obj === obj;
+  return (
+    Object.prototype.toString.call(obj) === '[object Number]' && obj === obj
+  );
 }
 
+/**
+ * 尝试将第一个参数转化为 number，如果无法转化为数字，则返回第二个参数兜底
+ */
 const toNumber = (value?: string | number, defaultValue?: number) => {
-  if(value === undefined) {
+  if (value === undefined) {
     return defaultValue;
   }
   if (isNumber(value)) {
@@ -33,6 +41,9 @@ const defaultOptions = {
   getContainer: () => document.body,
 };
 
+/**
+ * 传入 options 与默认 options 做合并
+ */
 const getMergedOptions = (o: Partial<WatermarkOptions>) => {
   const options = o || {};
 
@@ -40,19 +51,25 @@ const getMergedOptions = (o: Partial<WatermarkOptions>) => {
     ...options,
     rotate: options.rotate || defaultOptions.rotate,
     zIndex: options.zIndex || defaultOptions.zIndex,
-    fontStyle: { ...defaultOptions.fontStyle, ...options.fontStyle },
-    width: toNumber(options.width, options.image ? defaultOptions.width : undefined),
+    fontStyle: { ...defaultOptions.fontStyle, ...options.fontStyle }, // 注意，fontStyle 是将默认和传入的直接合并，默认在前，确保可以被传入的覆盖
+    width: toNumber(
+      options.width,
+      options.image ? defaultOptions.width : undefined
+    ), // 如果是图片类型但没有传入 width 就用默认 width，否则为 undefined，因为文字宽度是动态算的
     height: toNumber(options.height, undefined)!,
     getContainer: options.getContainer!,
     gap: [
       toNumber(options.gap?.[0], defaultOptions.gap[0]),
       toNumber(options.gap?.[1] || options.gap?.[0], defaultOptions.gap[1]),
     ],
-  } as Required<WatermarkOptions>;
+  } as Required<WatermarkOptions>; // Required 将 WatermarkOptions 的可选变为必选，因为合并后能确定每项都会有值
 
   const mergedOffsetX = toNumber(mergedOptions.offset?.[0], 0)!;
-  const mergedOffsetY = toNumber(mergedOptions.offset?.[1] || mergedOptions.offset?.[0], 0)!;
-  mergedOptions.offset = [ mergedOffsetX, mergedOffsetY ];
+  const mergedOffsetY = toNumber(
+    mergedOptions.offset?.[1] || mergedOptions.offset?.[0],
+    0
+  )!;
+  mergedOptions.offset = [mergedOffsetX, mergedOffsetY];
 
   return mergedOptions;
 };
@@ -62,9 +79,7 @@ export default function useWatermark(params: WatermarkOptions) {
 
   const mergedOptions = getMergedOptions(options);
 
-  function drawWatermark() {
-
-  }
+  function drawWatermark() {}
 
   useEffect(() => {
     drawWatermark();
@@ -74,7 +89,6 @@ export default function useWatermark(params: WatermarkOptions) {
     generateWatermark: (newOptions: Partial<WatermarkOptions>) => {
       setOptions(merge({}, options, newOptions));
     },
-    destroy: () => {
-    },
+    destroy: () => {},
   };
 }
