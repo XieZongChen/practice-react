@@ -82,12 +82,15 @@ const getCanvasData = async (
 ): Promise<{ width: number; height: number; base64Url: string }> => {
   const { rotate, image, content, fontStyle, gap } = options;
 
+  // 创建绘图的 canvas 上下文
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d')!;
 
+  // 因为不同屏幕的设备像素比不一样，也就是 1px 对应的物理像素不一样，所以要在单位后面乘以 devicePixelRatio
   const ratio = window.devicePixelRatio;
 
   const configCanvas = (size: { width: number; height: number }) => {
+    // 宽高需要考虑 gap
     const canvasWidth = gap[0] + size.width;
     const canvasHeight = gap[1] + size.height;
 
@@ -96,7 +99,9 @@ const getCanvasData = async (
     canvas.style.width = `${canvasWidth}px`;
     canvas.style.height = `${canvasHeight}px`;
 
+    // 用 translate 移动中心点到宽高的一半的位置,再进行 scale、rotate
     ctx.translate((canvasWidth * ratio) / 2, (canvasHeight * ratio) / 2);
+    // 设置 scale 放大 devicePixelRatio 倍，这样之后在 canvas 中绘制的尺寸就不用乘以设备像素比了
     ctx.scale(ratio, ratio);
 
     const RotateAngle = (rotate * Math.PI) / 180;
