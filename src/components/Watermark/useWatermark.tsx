@@ -89,6 +89,9 @@ const getCanvasData = async (
   // 因为不同屏幕的设备像素比不一样，也就是 1px 对应的物理像素不一样，所以要在单位后面乘以 devicePixelRatio
   const ratio = window.devicePixelRatio;
 
+  /**
+   * 统一修改 canvas 的宽高、缩放、旋转
+   */
   const configCanvas = (size: { width: number; height: number }) => {
     // 宽高需要考虑 gap
     const canvasWidth = gap[0] + size.width;
@@ -110,7 +113,36 @@ const getCanvasData = async (
 
   const drawText = () => {};
 
-  function drawImage() {}
+  function drawImage() {
+    return new Promise<{ width: number; height: number; base64Url: string }>(
+      (resolve) => {
+        const img = new Image();
+        // 安全相关设置
+        img.crossOrigin = 'anonymous'; // 跨域的时候不携带 cookie
+        img.referrerPolicy = 'no-referrer'; // 跨域的时候不携带 referer
+        img.src = image; 
+        img.onload = () => {
+          // onload 时，对于没有设置 width 或 height 的情况，根据图片宽高比算出一个值
+          let { width, height } = options;
+          if (!width || !height) {
+            if (width) {
+              height = (img.height / img.width) * +width;
+            } else {
+              width = (img.width / img.height) * +height;
+            }
+          }
+          configCanvas({ width, height });
+          // 在中心点绘制图片
+          ctx.drawImage(img, -width / 2, -height / 2, width, height);
+          return resolve({ base64Url: canvas.toDataURL(), width, height });
+        };
+        img.onerror = () => {
+          // 图片加载失败时，绘制文本兜底
+          return drawText();
+        };
+      }
+    );
+  }
 
   return image ? drawImage() : drawText();
 };
