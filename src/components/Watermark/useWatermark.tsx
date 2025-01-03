@@ -241,13 +241,16 @@ export default function useWatermark(params: WatermarkOptions) {
     }
 
     getCanvasData(mergedOptions).then(({ base64Url, width, height }) => {
+      const offsetLeft = mergedOptions.offset[0] + 'px';
+      const offsetTop = mergedOptions.offset[1] + 'px';
+
       // 注意 background-size 是 gap + width、gap + height 算出的
       const wmStyle = `
-        width:100%;
-        height:100%;
+        width:calc(100% - ${offsetLeft});
+        height:calc(100% - ${offsetTop});
         position:absolute;
-        top:0;
-        left:0;
+        top:${offsetTop};
+        left:${offsetLeft};
         bottom:0;
         right:0;
         pointer-events: none;

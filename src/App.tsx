@@ -2,7 +2,14 @@ import Watermark from './components/Watermark';
 
 function App() {
   return (
-    <Watermark content={['测试水印', '测试第二行水印']}>
+    <Watermark
+      content={['测试水印', '测试第二行水印']}
+      gap={[0, 0]}
+      offset={[50, 100]}
+      fontStyle={{
+        color: 'green',
+      }}
+    >
       <div style={{ height: 800 }}>
         <p>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos quod
