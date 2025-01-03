@@ -160,7 +160,7 @@ const getCanvasData = async (
   const drawText = () => {
     const { fontSize, color, fontWeight, fontFamily } = fontStyle;
     const realFontSize = toNumber(fontSize, 0) || fontStyle.fontSize;
-
+    // 计算字体宽高需要设置字体大小
     ctx.font = `${fontWeight} ${realFontSize}px ${fontFamily}`;
 
     // 如果没有传入 width、height 就自己计算一个
@@ -171,6 +171,7 @@ const getCanvasData = async (
     configCanvas({ width, height });
 
     ctx.fillStyle = color!;
+    // configCanvas 中有涉及到缩放，所以需要重新设置一下字体大小
     ctx.font = `${fontWeight} ${realFontSize}px ${fontFamily}`;
     ctx.textBaseline = 'top'; // 设置 textBaseline 为 top，顶部对齐
 
