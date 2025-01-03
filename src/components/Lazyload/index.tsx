@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-interface LazyloadProps {
+export interface LazyloadProps {
   /**
    * 类名
    */
