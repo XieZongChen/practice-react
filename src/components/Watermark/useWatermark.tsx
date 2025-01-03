@@ -232,6 +232,7 @@ export default function useWatermark(params: WatermarkOptions) {
 
   const mergedOptions = getMergedOptions(options);
   const watermarkDiv = useRef<HTMLDivElement>(); // 水印 Dom
+  const mutationObserver = useRef<MutationObserver>();
   const container = mergedOptions.getContainer();
   const { zIndex, gap } = mergedOptions;
 
@@ -268,6 +269,41 @@ export default function useWatermark(params: WatermarkOptions) {
       }
 
       watermarkDiv.current?.setAttribute('style', wmStyle.trim());
+
+      if (container) {
+        mutationObserver.current?.disconnect();
+        // MutationObserver 可以监听子节点的变动和节点属性变动，以此来防删
+        mutationObserver.current = new MutationObserver((mutations) => {
+          const isChanged = mutations.some((mutation) => {
+            let flag = false;
+            if (mutation.removedNodes.length) {
+              // 删除的节点中包含水印节点
+              flag = Array.from(mutation.removedNodes).some(
+                (node) => node === watermarkDiv.current
+              );
+            }
+            if (
+              mutation.type === 'attributes' &&
+              mutation.target === watermarkDiv.current
+            ) {
+              // 改动的是水印节点的属性
+              flag = true;
+            }
+            return flag;
+          });
+          if (isChanged) {
+            // 如果发生改动，则重新渲染水印
+            watermarkDiv.current = undefined;
+            drawWatermark();
+          }
+        });
+
+        mutationObserver.current.observe(container, {
+          attributes: true,
+          subtree: true,
+          childList: true,
+        });
+      }
     });
   }
 
