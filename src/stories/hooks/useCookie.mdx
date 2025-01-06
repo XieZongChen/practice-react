@@ -1,0 +1,32 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useCookie" />
+
+# useCookie
+
+操作 cookie
+
+```jsx
+const App = () => {
+  const [value, updateCookie, deleteCookie] = useCookie('cookie-storage');
+
+  useEffect(() => {
+    () => {
+      deleteCookie();
+    };
+  }, []);
+
+  const updateCookieHandler = () => {
+    updateCookie('666');
+  };
+
+  return (
+    <div>
+      <p>cookie 值: {value}</p>
+      <button onClick={updateCookieHandler}>更新 Cookie</button>
+      <br />
+      <button onClick={deleteCookie}>删除 Cookie</button>
+    </div>
+  );
+};
+```
