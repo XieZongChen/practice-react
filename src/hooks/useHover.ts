@@ -4,6 +4,7 @@ export type Element = ((state: boolean) => React.ReactElement) | React.ReactElem
 
 /**
  * js 模拟 hover 事件
+ * - 采用传入 React Element 然后 cloneElement 实现
  */
 const useHover = (element: Element): [React.ReactElement, boolean] => {
     const [state, setState] = useState(false); // 保存 hover 状态
