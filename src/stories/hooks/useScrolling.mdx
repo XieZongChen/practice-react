@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useScrolling" />
+
+# useScrolling
+
+滚动检测
+
+```jsx
+const App = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrolling = useScrolling(scrollRef);
+
+  return (
+    <>
+      {<div>{scrolling ? '滚动中..' : '没有滚动'}</div>}
+
+      <div ref={scrollRef} style={{ height: '200px', overflow: 'auto' }}>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+        <div>test placeholder</div>
+      </div>
+    </>
+  );
+};
+```
