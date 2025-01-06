@@ -1,3 +1,15 @@
 import { Meta } from "@storybook/blocks";
 
 <Meta title="hooks/useMountedState" />
+
+# useMountedState
+
+获取 react 组件 mount 状态
+
+```jsx
+const App = () => {
+  const isMounted = useMountedState();
+
+  return <div>{isMounted() ? 'mounted' : 'pending'}</div>;
+};
+```
