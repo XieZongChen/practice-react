@@ -1,0 +1,24 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useHover" />
+
+# useHover
+
+js 模拟 hover 事件
+
+```jsx
+const App = () => {
+  const element = (hovered: boolean) => (
+    <div>Hover me! {hovered && 'Thanks'}</div>
+  );
+
+  const [hoverable, hovered] = useHover(element);
+
+  return (
+    <div>
+      {hoverable}
+      <div>{hovered ? 'HOVERED' : ''}</div>
+    </div>
+  );
+};
+```
