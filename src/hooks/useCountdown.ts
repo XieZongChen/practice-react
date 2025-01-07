@@ -25,6 +25,10 @@ export interface FormattedRes {
     milliseconds: number;
 }
 
+/**
+ * 计算到目标时间的剩余时间
+ * @param target 目标时间
+ */
 const calcLeft = (target?: TDate) => {
     if (!target) {
         return 0;
