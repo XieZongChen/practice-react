@@ -5,7 +5,7 @@ export type IProps = Record<string, any>;
 /**
  * 在控制台打印组件因何 props 改变而造成重新渲染
  * @param componentName 组件名称
- * @param props 组件 props
+ * @param props 组件 props 和 state
  */
 export default function useWhyDidYouUpdate(componentName: string, props: IProps) {
     // 用 useRef 保存 props 或者其他值
