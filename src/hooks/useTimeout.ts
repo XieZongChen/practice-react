@@ -16,7 +16,9 @@ const useTimeout = (fn: () => void, delay?: number) => {
 
     useEffect(() => {
         // setTimeout 执行从 fnRef.current 取的最新的函数
-        timerRef.current = setTimeout(fnRef.current, delay);
+        timerRef.current = setTimeout(() => {
+            fnRef.current()
+        }, delay);
 
         return clear;
     }, [delay]);
