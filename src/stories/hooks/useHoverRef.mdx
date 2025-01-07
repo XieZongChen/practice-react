@@ -1,0 +1,15 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useHoverRef" />
+
+# useHoverRef
+
+通过传入 ref 进行 js 模拟 hover 事件
+
+```jsx
+function App() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isHovering = useHoverRef(ref);
+  return <div ref={ref}>{isHovering ? 'hover' : 'leaveHover'}</div>;
+}
+```
