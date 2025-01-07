@@ -1,0 +1,22 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useSize" />
+
+# useSize
+
+获取 dom 的尺寸，在窗口大小改变的时候会实时返回新的尺寸
+
+```jsx
+function App() {
+  const ref = useRef<HTMLDivElement>(null);
+  const size = useSize(ref);
+  return (
+    <div ref={ref}>
+      <p>改变窗口大小试试</p>
+      <p>
+        width: {size?.width}px, height: {size?.height}px
+      </p>
+    </div>
+  );
+}
+```
