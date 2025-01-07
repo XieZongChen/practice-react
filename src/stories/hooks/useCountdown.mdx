@@ -1,0 +1,33 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useCountdown" />
+
+# useCountdown
+
+倒计时
+
+**参数**
+- `options-leftTime` 剩余时间
+- `options-targetDate` 目标日期
+- `options-interval` 倒计时变化的时间间隔，默认 1s
+- `options-onEnd` 倒计时结束的回调
+
+**返回**
+- [`timeLeft` 剩余时间, `formattedRes` 格式化的剩余时间]
+
+```jsx
+function App() {
+  const [countdown, formattedRes] = useCountDown({
+    targetDate: `${new Date().getFullYear()}-12-31 23:59:59`,
+  });
+
+  const { days, hours, minutes, seconds, milliseconds } = formattedRes;
+
+  return (
+    <p>
+      距离今年年底还剩 {days} 天 {hours} 小时 {minutes} 分钟 {seconds} 秒{' '}
+      {milliseconds} 毫秒
+    </p>
+  );
+}
+```
