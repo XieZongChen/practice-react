@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hooks/useTimeout" />
+
+# useTimeout
+
+计时器
+
+```jsx
+function App() {
+  const [state, setState] = useState(1);
+  
+  useTimeout(() => {
+    setState(state + 1);
+  }, 3000);
+
+  return <div>{state}</div>;
+}
+```
