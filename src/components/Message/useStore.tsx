@@ -25,16 +25,20 @@ function useStore(defaultPosition: Position) {
     add: (messageProps: MessageProps) => {
       const id = getId(messageProps);
       setMessageList((preState) => {
+        // 需要先看 props 是否有设置 id，有的话需要处理 id 冲突的情况
         if (messageProps?.id) {
           const position = getMessagePosition(preState, messageProps.id);
+          // 如果有 position，说明当前 id 存在 message，所以不用添加新的，此处直接返回之间的列表
           if (position) return preState;
         }
 
         const position = messageProps.position || defaultPosition;
         const isTop = position.includes('top');
         const messages = isTop
-          ? [{ ...messageProps, id }, ...(preState[position] ?? [])]
-          : [...(preState[position] ?? []), { ...messageProps, id }];
+          ? // top 列表中，新的数据插在队列前方
+            [{ ...messageProps, id }, ...(preState[position] ?? [])]
+          : // bottom 列表中，新的数据插在队列后方
+            [...(preState[position] ?? []), { ...messageProps, id }];
 
         return {
           ...preState,
@@ -100,9 +104,17 @@ export function getId(messageProps: MessageProps) {
   return count;
 }
 
+/**
+ * 获取 message id 对应的 message 的 position，也可用来判断一个 id 是否存在 message
+ * @param messageList 当前列表
+ * @param id 所查 message id
+ * @returns
+ */
 export function getMessagePosition(messageList: MessageList, id: number) {
+  // 用 for of 遍历出所有 position 和 列表
   for (const [position, list] of Object.entries(messageList)) {
     if (list.find((item) => item.id === id)) {
+      // 如果当前列表里有所查 id，则返回当前 position
       return position as Position;
     }
   }
