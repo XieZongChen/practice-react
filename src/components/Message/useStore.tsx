@@ -56,6 +56,7 @@ function useStore(defaultPosition: Position) {
         const { position, index } = findMessage(nextState, id);
 
         if (position && index !== -1) {
+          // 如果能找到 message，则更新 message
           nextState[position][index] = {
             ...nextState[position][index],
             ...messageProps,
@@ -105,7 +106,7 @@ export function getId(messageProps: MessageProps) {
 }
 
 /**
- * 获取 message id 对应的 message 的 position，也可用来判断一个 id 是否存在 message
+ * 获取所传列表中 message id 对应的 message 的 position，也可用来判断一个 id 是否存在 message
  * @param messageList 当前列表
  * @param id 所查 message id
  * @returns
@@ -120,9 +121,18 @@ export function getMessagePosition(messageList: MessageList, id: number) {
   }
 }
 
+/**
+ * 在所传列表中找到 message id 对应的 message，并返回其 position 和 index
+ * @param messageList 当前列表
+ * @param id 所查 message id
+ * @returns
+ */
 export function findMessage(messageList: MessageList, id: number) {
+  // todo: 这里有性能优化空间，现在有重复查找
+  // 先找在哪个 position 中
   const position = getMessagePosition(messageList, id);
 
+  // 再根据 position 找到对应列表的 index
   const index = position
     ? messageList[position].findIndex((message) => message.id === id)
     : -1;
