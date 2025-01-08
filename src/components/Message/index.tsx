@@ -1,8 +1,9 @@
-import { CSSProperties, FC, ReactNode, useEffect } from 'react';
+import { CSSProperties, FC, ReactNode, useEffect, useMemo } from 'react';
 import useStore from './useStore';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import './index.scss';
+import { createPortal } from 'react-dom';
 
 export type Position = 'top' | 'bottom';
 
@@ -29,7 +30,7 @@ export const MessageProvider: FC<{}> = (props) => {
 
   const positions = Object.keys(messageList) as Position[];
 
-  return (
+  const messageWrapper = (
     <div className='message-wrapper'>
       {positions.map((direction) => {
         return (
@@ -53,4 +54,16 @@ export const MessageProvider: FC<{}> = (props) => {
       })}
     </div>
   );
+
+  // 在 useMemo 里创建 wrapper div，因为依赖数组为空，所以只会创建一次
+  const el = useMemo(() => {
+    const el = document.createElement('div');
+    el.className = `wrapper`;
+
+    document.body.appendChild(el);
+    return el;
+  }, []);
+
+  // createPortal 把 messageWrapper 渲染到 wrapper 下面
+  return createPortal(messageWrapper, el);
 };
