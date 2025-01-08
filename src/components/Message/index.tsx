@@ -1,9 +1,17 @@
-import { CSSProperties, FC, ReactNode, useEffect, useMemo } from 'react';
+import {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import useStore from './useStore';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import './index.scss';
 import { createPortal } from 'react-dom';
+import { useTimer } from './useTimer';
 
 export type Position = 'top' | 'bottom';
 
@@ -16,6 +24,23 @@ export interface MessageProps {
   id?: number;
   position?: Position;
 }
+const MessageItem: FC<MessageProps> = (item) => {
+  const { onMouseEnter, onMouseLeave } = useTimer({
+    id: item.id!,
+    duration: item.duration,
+    remove: item.onClose!,
+  });
+
+  return (
+    <div
+      className='message-item'
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {item.content}
+    </div>
+  );
+};
 
 export const MessageProvider: FC<{}> = (props) => {
   const { messageList, add, update, remove, clearAll } = useStore('top');
@@ -34,22 +59,21 @@ export const MessageProvider: FC<{}> = (props) => {
     <div className='message-wrapper'>
       {positions.map((direction) => {
         return (
-          <TransitionGroup
-            className={`message-wrapper-${direction}`}
-            key={direction}
-          >
-            {messageList[direction].map((item) => {
-              return (
-                <CSSTransition
-                  key={item.id}
-                  timeout={1000}
-                  classNames='message'
-                >
-                  <div className='message-item'>{item.content}</div>
-                </CSSTransition>
-              );
-            })}
-          </TransitionGroup>
+          <div className={`message-wrapper-${direction}`} key={direction}>
+            <TransitionGroup>
+              {messageList[direction].map((item) => {
+                return (
+                  <CSSTransition
+                    key={item.id}
+                    timeout={1000}
+                    classNames='message'
+                  >
+                    <MessageItem onClose={remove} {...item}></MessageItem>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
+          </div>
         );
       })}
     </div>
