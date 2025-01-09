@@ -5,8 +5,12 @@ interface ConfigProviderProps {
   messageRef?: RefObject<MessageRef>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ConfigContext = createContext<ConfigProviderProps>({});
 
+/**
+ * message 上下文，用于向下透传 message 的操作方法
+ */
 export function ConfigProvider(props: PropsWithChildren) {
   const { children } = props;
 

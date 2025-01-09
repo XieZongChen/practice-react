@@ -51,61 +51,72 @@ export interface MessageProps {
   position?: Position;
 }
 
-export const MessageProvider = forwardRef<MessageRef, {}>(
-  (props, ref) => {
-    const { messageList, add, update, remove, clearAll } = useStore('top');
+export const MessageProvider = forwardRef<MessageRef, {}>((props, ref) => {
+  const { messageList, add, update, remove, clearAll } = useStore('top');
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          add,
-          update,
-          remove,
-          clearAll,
-        };
-      },
-      []
-    );
-
-    const positions = Object.keys(messageList) as Position[];
-
-    const messageWrapper = (
-      <div className='message-wrapper'>
-        {positions.map((direction) => {
-          return (
-            <div className={`message-wrapper-${direction}`} key={direction}>
-              <TransitionGroup>
-                {messageList[direction].map((item) => {
-                  return (
-                    <CSSTransition
-                      key={item.id}
-                      timeout={1000}
-                      classNames='message'
-                    >
-                      <MessageItem onClose={remove} {...item}></MessageItem>
-                    </CSSTransition>
-                  );
-                })}
-              </TransitionGroup>
-            </div>
-          );
-        })}
-      </div>
-    );
-
-    // 在 useMemo 里创建 wrapper div，因为依赖数组为空，所以只会创建一次
-    const el = useMemo(() => {
-      const el = document.createElement('div');
-      el.className = `wrapper`;
-
-      document.body.appendChild(el);
-      return el;
-    }, []);
-
-    // createPortal 把 messageWrapper 渲染到 wrapper 下面
-    return createPortal(messageWrapper, el);
+  if ('current' in ref!) {
+    ref.current = {
+      add,
+      update,
+      remove,
+      clearAll,
+    };
   }
-);
+  /**
+   * useImperativeHandle 并不是立刻修改 ref，而是会在之后的某个时间来修改
+   * 所以会导致这里设置操作方法晚于 useMessage 取方法
+   * 固上面直接修改 ref.current 的值
+   */
+  // useImperativeHandle(
+  //   ref,
+  //   () => {
+  //     return {
+  //       add,
+  //       update,
+  //       remove,
+  //       clearAll,
+  //     };
+  //   },
+  //   []
+  // );
+
+  const positions = Object.keys(messageList) as Position[];
+
+  const messageWrapper = (
+    <div className='message-wrapper'>
+      {positions.map((direction) => {
+        return (
+          <div className={`message-wrapper-${direction}`} key={direction}>
+            <TransitionGroup>
+              {messageList[direction].map((item) => {
+                return (
+                  <CSSTransition
+                    key={item.id}
+                    timeout={1000}
+                    classNames='message'
+                  >
+                    <MessageItem onClose={remove} {...item}></MessageItem>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  // 在 useMemo 里创建 wrapper div，因为依赖数组为空，所以只会创建一次
+  const el = useMemo(() => {
+    const el = document.createElement('div');
+    el.className = `wrapper`;
+
+    document.body.appendChild(el);
+    return el;
+  }, []);
+
+  // createPortal 把 messageWrapper 渲染到 wrapper 下面
+  return createPortal(messageWrapper, el);
+});
 
 MessageProvider.displayName = 'MessageProvider';

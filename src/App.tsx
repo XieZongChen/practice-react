@@ -1,18 +1,31 @@
 import React, { useRef } from 'react';
-import { MessageProvider, MessageRef } from './components/Message';
+import { ConfigProvider } from './components/Space/ConfigProvider';
+import { useMessage } from './components/Message/useMessage';
 
-function App() {
-  const messageRef = useRef<MessageRef>(null);
+function Test() {
+  const message = useMessage();
 
   return (
-    <div>
-      <MessageProvider ref={messageRef}></MessageProvider>     
-      <button onClick={() =>{
-        messageRef.current?.add({
-          content:'请求成功'
-        })
-      }}>成功</button>
-    </div>
+    <button
+      onClick={() => {
+        console.log('message', message)
+        message?.add({
+          content: '请求成功',
+        });
+      }}
+    >
+      成功
+    </button>
+  );
+}
+
+function App() {
+  return (
+    <ConfigProvider>
+      <div>
+        <Test></Test>
+      </div>
+    </ConfigProvider>
   );
 }
 
