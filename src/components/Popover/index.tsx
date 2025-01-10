@@ -63,13 +63,12 @@ export default function Popover(props: PopoverProps) {
     ],
   });
 
-  const interaction =
-    trigger === 'hover' ? useHover(context) : useClick(context);
-
+  const hover = useHover(context, { enabled: trigger === 'hover' });
+  const click = useClick(context, { enabled: trigger === 'click' });
   const dismiss = useDismiss(context);
-
   const { getReferenceProps, getFloatingProps } = useInteractions([
-    interaction,
+    hover,
+    click,
     dismiss,
   ]);
 
