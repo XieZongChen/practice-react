@@ -56,19 +56,20 @@ export default function Popover(props: PopoverProps) {
       setIsOpen(open);
       onOpenChange?.(open);
     },
-    placement,
+    placement, // 弹出位置
     middleware: [
-      offset(10),
+      offset(10), // 弹出位移调整
       arrow({
+        // 自定义箭头
         element: arrowRef,
       }),
-      flip(),
+      flip(), // 边界处理
     ],
   });
 
   const hover = useHover(context, { enabled: trigger === 'hover' });
   const click = useClick(context, { enabled: trigger === 'click' });
-  const dismiss = useDismiss(context);
+  const dismiss = useDismiss(context); // 点击其他位置消失
   const { getReferenceProps, getFloatingProps } = useInteractions([
     hover,
     click,
