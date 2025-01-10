@@ -51,6 +51,7 @@ export interface MessageProps {
   position?: Position;
 }
 
+// todo: message 组件需要参考 arco 或者 antd 进行优化 
 export const MessageProvider = forwardRef<MessageRef, {}>((props, ref) => {
   const { messageList, add, update, remove, clearAll } = useStore('top');
 
