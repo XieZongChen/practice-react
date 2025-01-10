@@ -16,7 +16,7 @@ import {
   flip,
   useHover,
 } from '@floating-ui/react';
-import './index.css';
+import './index.scss';
 
 type Alignment = 'start' | 'end';
 type Side = 'top' | 'right' | 'bottom' | 'left';

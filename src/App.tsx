@@ -1,31 +1,29 @@
 import React, { useRef } from 'react';
-import { ConfigProvider } from './components/Space/ConfigProvider';
-import { useMessage } from './components/Message/useMessage';
-
-function Test() {
-  const message = useMessage();
-
-  return (
-    <button
-      onClick={() => {
-        console.log('message', message)
-        message?.add({
-          content: '请求成功',
-        });
-      }}
-    >
-      成功
-    </button>
-  );
-}
+import Popover from './components/Popover';
 
 function App() {
+  const popoverContent = (
+    <div>
+      测试内容
+      <button
+        onClick={() => {
+          alert(1);
+        }}
+      >
+        测试组件
+      </button>
+    </div>
+  );
+
   return (
-    <ConfigProvider>
-      <div>
-        <Test></Test>
-      </div>
-    </ConfigProvider>
+    <Popover
+      content={popoverContent}
+      placement='bottom'
+      trigger='click'
+      style={{ margin: '200px' }}
+    >
+      <button>测试</button>
+    </Popover>
   );
 }
 
