@@ -38,3 +38,33 @@ export const calculateColor = (props: {
         a: hsv.a,
     });
 }
+
+/**
+ * 使用颜色计算出当前颜色 Handler 的位置
+ * @param containerRef 
+ * @param targetRef 
+ * @param color 
+ * @returns 
+ */
+export const calculateOffset = (
+    containerRef: React.RefObject<HTMLDivElement>,
+    targetRef: React.RefObject<HTMLDivElement>,
+    color: Color
+): TransformOffset => {
+    const { width, height } = containerRef.current!.getBoundingClientRect();
+    const {
+        width: targetWidth,
+        height: targetHeight
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+    const centerOffsetY = targetHeight / 2;
+    const hsv = color.toHsv();
+
+    // 根据 hsv 里的 s 和 v 的百分比乘以 width、height，计算出 x、y，然后减去 Handler 宽高的一半
+    return {
+        x: hsv.s * width - centerOffsetX,
+        y: (1 - hsv.v) * height - centerOffsetY,
+    };
+};
+

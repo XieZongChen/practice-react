@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { TransformOffset } from './Transform';
+import { Color } from './color';
 
 // 兼容原生和 react 的鼠标事件类型
 type EventType =
@@ -9,28 +10,41 @@ type EventType =
 type EventHandle = (e: EventType) => void;
 
 interface useColorDragProps {
-    offset?: TransformOffset;
+    color?: Color; // 初始颜色
+    offset?: TransformOffset; // 初始位置
     containerRef: React.RefObject<HTMLDivElement>; // 容器 ref，也就是 Palette 或者 Slider 的 ref
     targetRef: React.RefObject<HTMLDivElement>; // 目标 ref，也就是 Handler 的 ref
     direction?: 'x' | 'y'; // 拖动轴向，如果传 x，则只支持 x 轴拖动；如果传 y，则同时支持 x 和 y 轴拖动。此参数为了同时适配在 Palette 和 Slider 上的拖动
     onDragChange?: (offset: TransformOffset) => void;
+    calculate?: () => TransformOffset; // 计算位置函数
 }
 
 function useColorDrag(
     props: useColorDragProps,
 ): [TransformOffset, EventHandle] {
     const {
+        color,
         offset,
         targetRef,
         containerRef,
         direction,
         onDragChange,
+        calculate
     } = props;
 
     const [offsetValue, setOffsetValue] = useState(offset || { x: 0, y: 0 }); // 保存相对坐标
     const dragRef = useRef({
         flag: false // 是否在拖动中
     });
+
+    useEffect(() => {
+        if (dragRef.current.flag === false) {
+            const calcOffset = calculate?.();
+            if (calcOffset) {
+                setOffsetValue(calcOffset);
+            }
+        }
+    }, [color]);
 
     useEffect(() => {
         // 清空之前的事件监听，防止内存溢出

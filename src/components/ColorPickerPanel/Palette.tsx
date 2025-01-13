@@ -3,7 +3,7 @@ import { Color } from './color';
 import Handler from './Handler';
 import Transform from './Transform';
 import useColorDrag from './useColorDrag';
-import { calculateColor } from './utils';
+import { calculateColor, calculateOffset } from './utils';
 
 const Palette: FC<{
   color: Color;
@@ -15,6 +15,7 @@ const Palette: FC<{
   const [offset, dragStartHandle] = useColorDrag({
     containerRef,
     targetRef: transformRef,
+    color,
     onDragChange: (offsetValue) => {
       const newColor = calculateColor({
         offset: offsetValue,
@@ -23,6 +24,9 @@ const Palette: FC<{
         color,
       });
       onChange?.(newColor);
+    },
+    calculate: () => {
+      return calculateOffset(containerRef, transformRef, color);
     },
   });
 
