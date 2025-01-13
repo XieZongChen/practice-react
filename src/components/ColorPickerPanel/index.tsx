@@ -1,12 +1,14 @@
 import { CSSProperties } from 'react';
 import cs from 'classnames';
+import { Color } from './color';
+import { ColorType } from './interface';
 import './index.scss';
 
 export interface ColorPickerProps {
   className?: string;
   style?: CSSProperties;
-  value?: string;
-  onChange?: (color: string) => void;
+  value?: ColorType;
+  onChange?: (color: Color) => void;
 }
 
 function ColorPickerPanel(props: ColorPickerProps) {
