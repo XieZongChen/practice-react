@@ -1,10 +1,11 @@
 import { CSSProperties, useMemo, useState } from 'react';
 import cs from 'classnames';
+import { useControllableValue } from 'ahooks';
 import { Color } from './color';
 import { ColorType } from './interface';
 import Palette from './Palette';
+import Ribbon from './Ribbon';
 import './index.scss';
-import { useControllableValue } from 'ahooks';
 
 export interface ColorPickerProps {
   className?: string;
@@ -33,7 +34,7 @@ function ColorPickerPanel(props: ColorPickerProps) {
     onChange?.(color);
   }
 
-  const classNames = cs('color-picker', className);
+  const classNames = cs('color-picker-panel', className);
 
   return (
     <div className={classNames} style={style}>
@@ -41,13 +42,18 @@ function ColorPickerPanel(props: ColorPickerProps) {
         color={colorTypeMerged}
         onChange={onPaletteColorChange}
       ></Palette>
-      <div
-        style={{
-          width: 20,
-          height: 20,
-          background: colorTypeMerged.toRgbString(),
-        }}
-      ></div>
+      <div className='color-picker-panel-control'>
+        <div className='color-picker-panel-control-wrapper'>
+          <Ribbon color={colorTypeMerged} />
+          <Ribbon color={colorTypeMerged} />
+        </div>
+        <div
+          className='color-picker-panel-preview'
+          style={{
+            background: colorTypeMerged.toRgbString(),
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
