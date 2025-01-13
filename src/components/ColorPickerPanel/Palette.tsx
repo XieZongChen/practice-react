@@ -1,11 +1,18 @@
-import type { FC } from 'react';
+import { useRef, type FC } from 'react';
 import { Color } from './color';
+import Handler from './Handler';
+import Transform from './Transform';
 
 const Palette: FC<{
   color: Color;
 }> = ({ color }) => {
+  const transformRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className='color-picker-panel-palette'>
+      <Transform ref={transformRef} offset={{ x: 50, y: 50 }}>
+        <Handler color={color.toRgbString()} />
+      </Transform>
       <div
         className='color-picker-panel-palette-main'
         style={{
