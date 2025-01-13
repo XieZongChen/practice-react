@@ -24,11 +24,16 @@ function ColorPickerPanel(props: ColorPickerProps) {
     return new Color(value);
   });
 
+  function onPaletteColorChange(color: Color) {
+    setColorValue(color);
+    onChange?.(color);
+  }
+
   const classNames = cs('color-picker', className);
 
   return (
     <div className={classNames} style={style}>
-      <Palette color={colorValue}></Palette>
+      <Palette color={colorValue} onChange={onPaletteColorChange}></Palette>
     </div>
   );
 }
