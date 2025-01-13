@@ -110,6 +110,7 @@ function useColorDrag(
     };
 
     const onDragStart: EventHandle = e => {
+        e.preventDefault()
         // 拖拽开始时绑定鼠标监听事件
         document.addEventListener('mousemove', onDragMove);
         document.addEventListener('mouseup', onDragStop);
