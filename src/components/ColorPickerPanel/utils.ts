@@ -2,7 +2,7 @@ import { TransformOffset } from "./Transform";
 import { Color } from "./color";
 
 /**
- * 计算 Color 值
+ * 计算调色板 Color 值
  * @param offset Handler 的位移
  * @param containerRef 容器 ref
  * @param targetRef Handler 的位移
@@ -40,7 +40,7 @@ export const calculateColor = (props: {
 }
 
 /**
- * 使用颜色计算出当前颜色 Handler 的位置
+ * 使用颜色计算出当前颜色 Handler 在调色板上的位置
  * @param containerRef 
  * @param targetRef 
  * @param color 
@@ -67,4 +67,55 @@ export const calculateOffset = (
         y: (1 - hsv.v) * height - centerOffsetY,
     };
 };
+
+/**
+ * 计算 Hue Color 值
+ */
+export const calcHueColor = (props: {
+    offset: TransformOffset;
+    containerRef: React.RefObject<HTMLDivElement>;
+    targetRef: React.RefObject<HTMLDivElement>;
+    color: Color;
+}): Color => {
+    const { offset, targetRef, containerRef, color } = props;
+
+    const { width } = containerRef.current!.getBoundingClientRect();
+    const {
+        width: targetWidth,
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+
+    // x/width 用 y/height 求出一个比例，根据比例设置 hsv 的值
+    const hue = (offset.x + centerOffsetX) / width;
+    const hsv = color.toHsv();
+
+    return new Color({
+        h: hue * 360,
+        s: hsv.s,
+        v: hsv.v,
+        a: hsv.a,
+    });
+}
+
+/**
+ * 使用颜色计算出当前颜色 Handler 在 Hue 上的位置
+ */
+export const calcHueOffset = (containerRef: React.RefObject<HTMLDivElement>,
+    targetRef: React.RefObject<HTMLDivElement>,
+    color: Color): TransformOffset => {
+    const { width } = containerRef.current!.getBoundingClientRect();
+    const {
+        width: targetWidth,
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+    const hue = color.toHsv().h;
+
+    // 色相是分布在 360 个单位上的，hue / 360 计算出当前 hue 所在区域比例
+    return {
+        x: (hue / 360) * width - centerOffsetX,
+        y: 0,
+    };
+}
 
