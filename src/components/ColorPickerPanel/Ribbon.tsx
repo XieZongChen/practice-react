@@ -4,7 +4,12 @@ import { Color } from './color';
 import Handler from './Handler';
 import Transform from './Transform';
 import useColorDrag from './useColorDrag';
-import { calcHueColor, calcHueOffset } from './utils';
+import {
+  calcHueColor,
+  calcHueOffset,
+  calcLightColor,
+  calcLightOffset,
+} from './utils';
 
 const Ribbon: FC<{
   color: Color;
@@ -20,6 +25,19 @@ const Ribbon: FC<{
     color,
     direction: 'x',
     onDragChange: (offsetValue) => {
+      if (type === 'light') {
+        const newColor = calcLightColor({
+          offset: offsetValue,
+          containerRef,
+          targetRef: transformRef,
+          color,
+        });
+        console.log('newColor', newColor);
+        
+        onChange?.(newColor);
+        return;
+      }
+
       const newColor = calcHueColor({
         offset: offsetValue,
         containerRef,
@@ -29,6 +47,10 @@ const Ribbon: FC<{
       onChange?.(newColor);
     },
     calculate: () => {
+      if (type === 'light') {
+        const _offset = calcLightOffset(containerRef, transformRef, color);
+        return { ..._offset, y: -1 };
+      }
       const _offset = calcHueOffset(containerRef, transformRef, color);
       return { ..._offset, y: -1 };
     },

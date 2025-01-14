@@ -119,3 +119,53 @@ export const calcHueOffset = (containerRef: React.RefObject<HTMLDivElement>,
     };
 }
 
+/**
+ * 计算 Light Color 值
+ */
+export const calcLightColor = (props: {
+    offset: TransformOffset;
+    containerRef: React.RefObject<HTMLDivElement>;
+    targetRef: React.RefObject<HTMLDivElement>;
+    color: Color;
+}): Color => {
+    const { offset, targetRef, containerRef, color } = props;
+
+    const { width } = containerRef.current!.getBoundingClientRect();
+    const {
+        width: targetWidth,
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+
+    // x/width 用 y/height 求出一个比例，根据比例设置 hsv 的值
+    const light = (offset.x + centerOffsetX) / width;
+    const hsv = color.toHsv();
+
+    return new Color({
+        h: hsv.h,
+        s: hsv.s,
+        v: hsv.v,
+        a: light,
+    });
+}
+
+/**
+ * 使用颜色计算出当前颜色 Handler 在 Light 上的位置
+ */
+export const calcLightOffset = (containerRef: React.RefObject<HTMLDivElement>,
+    targetRef: React.RefObject<HTMLDivElement>,
+    color: Color): TransformOffset => {
+    const { width } = containerRef.current!.getBoundingClientRect();
+    const {
+        width: targetWidth,
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+    const light = color.toHsv().a;
+
+    return {
+        x: light * width - centerOffsetX,
+        y: 0,
+    };
+}
+

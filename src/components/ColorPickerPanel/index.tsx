@@ -20,7 +20,7 @@ function ColorPickerPanel(props: ColorPickerProps) {
 
   const [colorValue, setColorValue] = useControllableValue<Color>(props);
 
-  const colorTypeMerged = useMemo(() => {    
+  const colorTypeMerged = useMemo(() => {
     if (colorValue instanceof Color) {
       // 如果是 Color 类型，直接使用
       return colorValue;
@@ -29,12 +29,17 @@ function ColorPickerPanel(props: ColorPickerProps) {
     return new Color(colorValue);
   }, [colorValue]);
 
-  function onPaletteColorChange(color: Color) {
+  function handlePaletteColorChange(color: Color) {
     setColorValue(color);
     onChange?.(color);
   }
 
   function handleHueChange(color: Color) {
+    setColorValue(color);
+    onChange?.(color);
+  }
+
+  function handleLightChange(color: Color) {
     setColorValue(color);
     onChange?.(color);
   }
@@ -45,7 +50,7 @@ function ColorPickerPanel(props: ColorPickerProps) {
     <div className={classNames} style={style}>
       <Palette
         color={colorTypeMerged}
-        onChange={onPaletteColorChange}
+        onChange={handlePaletteColorChange}
       ></Palette>
       <div className='color-picker-panel-control'>
         <div className='color-picker-panel-control-wrapper'>
@@ -54,7 +59,11 @@ function ColorPickerPanel(props: ColorPickerProps) {
             type='hue'
             onChange={handleHueChange}
           />
-          <Ribbon color={colorTypeMerged} type='light' />
+          <Ribbon
+            color={colorTypeMerged}
+            type='light'
+            onChange={handleLightChange}
+          />
         </div>
         <div
           className='color-picker-panel-preview'
