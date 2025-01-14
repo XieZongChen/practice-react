@@ -8,7 +8,13 @@ import Ribbon from './Ribbon';
 import './index.scss';
 
 export interface ColorPickerProps {
+  /**
+   * 类名
+   */
   className?: string;
+  /**
+   * 样式
+   */
   style?: CSSProperties;
   value?: ColorType;
   defaultValue?: ColorType;
