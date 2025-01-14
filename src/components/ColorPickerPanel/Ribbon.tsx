@@ -33,7 +33,7 @@ const Ribbon: FC<{
           color,
         });
         console.log('newColor', newColor);
-        
+
         onChange?.(newColor);
         return;
       }
@@ -74,7 +74,7 @@ const Ribbon: FC<{
         style={
           type === 'light'
             ? {
-                background: `linear-gradient(to right, rgba(0, 0, 0, 0), ${color.toPercentageRgbString()})`,
+                background: `linear-gradient(to right, rgba(0, 0, 0, 0), rgba(${color.r}, ${color.g}, ${color.b}, 1))`,
               }
             : undefined
         }
