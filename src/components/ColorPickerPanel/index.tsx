@@ -44,8 +44,8 @@ function ColorPickerPanel(props: ColorPickerProps) {
       ></Palette>
       <div className='color-picker-panel-control'>
         <div className='color-picker-panel-control-wrapper'>
-          <Ribbon color={colorTypeMerged} />
-          <Ribbon color={colorTypeMerged} />
+          <Ribbon color={colorTypeMerged} type='hue' />
+          <Ribbon color={colorTypeMerged} type='light' />
         </div>
         <div
           className='color-picker-panel-preview'
