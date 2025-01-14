@@ -7,7 +7,7 @@ import Palette from './Palette';
 import Ribbon from './Ribbon';
 import './index.scss';
 
-export interface ColorPickerProps {
+export interface ColorPickerPanelProps {
   /**
    * 类名
    */
@@ -21,7 +21,7 @@ export interface ColorPickerProps {
   onChange?: (color: Color) => void;
 }
 
-function ColorPickerPanel(props: ColorPickerProps) {
+function ColorPickerPanel(props: ColorPickerPanelProps) {
   const { className, style, onChange } = props;
 
   const [colorValue, setColorValue] = useControllableValue<Color>(props);
