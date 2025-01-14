@@ -32,8 +32,6 @@ const Ribbon: FC<{
           targetRef: transformRef,
           color,
         });
-        console.log('newColor', newColor);
-
         onChange?.(newColor);
         return;
       }

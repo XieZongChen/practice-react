@@ -1,4 +1,4 @@
-import { CSSProperties, useMemo, useState } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import cs from 'classnames';
 import { useControllableValue } from 'ahooks';
 import { Color } from './color';
