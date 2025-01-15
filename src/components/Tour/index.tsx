@@ -44,6 +44,8 @@ export const Tour: FC<TourProps> = (props) => {
 
   const [done, setDone] = useState(false);
 
+  const [isMaskMoving, setIsMaskMoving] = useState<boolean>(false);
+
   const getCurrentStep = () => {
     return steps[currentStep];
   };
@@ -62,7 +64,7 @@ export const Tour: FC<TourProps> = (props) => {
   const forward = async () => {
     if (currentStep === steps.length - 1) {
       await onStepsEnd?.();
-      setDone(true)
+      setDone(true);
       return;
     }
 
@@ -102,7 +104,9 @@ export const Tour: FC<TourProps> = (props) => {
       </div>
     );
 
-    return (
+    return isMaskMoving ? (
+      wrapper
+    ) : (
       <Popover
         content={
           <div>
@@ -138,6 +142,8 @@ export const Tour: FC<TourProps> = (props) => {
       container={currentContainerElement}
       element={currentSelectedElement}
       renderMaskContent={(wrapper) => renderPopover(wrapper)}
+      onAnimationStart={() => setIsMaskMoving(true)}
+      onAnimationEnd={() => setIsMaskMoving(false)}
     />
   );
 

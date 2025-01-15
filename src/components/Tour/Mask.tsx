@@ -6,12 +6,31 @@ interface MaskProps {
   element: HTMLElement; // 目标元素
   container?: HTMLElement; // 遮罩层所在容器
   renderMaskContent?: (wrapper: React.ReactNode) => React.ReactNode; // 遮罩上的标示内容渲染函数
+  onAnimationStart?: () => void;
+  onAnimationEnd?: () => void;
 }
 
 export const Mask: React.FC<MaskProps> = (props) => {
-  const { element, renderMaskContent, container } = props;
+  const {
+    element,
+    renderMaskContent,
+    container,
+    onAnimationStart,
+    onAnimationEnd,
+  } = props;
 
   const [style, setStyle] = useState<CSSProperties>({});
+
+  useEffect(() => {
+    onAnimationStart?.();
+    const timer = setTimeout(() => {
+      onAnimationEnd?.();
+    }, 200);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [element]);
 
   useEffect(() => {
     // 保证 container 后 mask 会重新计算
