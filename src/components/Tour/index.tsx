@@ -23,6 +23,9 @@ export interface TourProps {
    * 每一步的配置
    */
   steps: TourStepConfig[];
+  /**
+   * 渲染容器指定函数，默认为 document
+   */
   getContainer?: () => HTMLElement;
   /**
    * 所有步骤完成后的回调
@@ -130,5 +133,6 @@ export const Tour: FC<TourProps> = (props) => {
     />
   );
 
+  // 用 createPortal 把 mask 渲染到容器元素
   return createPortal(mask, currentContainerElement);
 };
