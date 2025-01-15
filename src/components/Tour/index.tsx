@@ -3,39 +3,35 @@ import { createPortal } from 'react-dom';
 // todo: 这里先使用 antd 的组件，后续换成自己的组件
 import { Button, Popover } from 'antd';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import { Mask } from './Mask'
+import { Mask } from './Mask';
 import './index.scss';
 
 export interface TourStepConfig {
-    selector: () => HTMLElement | null;
-  
-    placement?: TooltipPlacement;
-  
-    renderContent?: (currentStep: number) => React.ReactNode;
-  
-    beforeForward?: (currentStep: number) => void;
-  
-    beforeBack?: (currentStep: number) => void;
+  selector: () => HTMLElement | null; // 当前步在哪个元素
+  placement?: TooltipPlacement; // 当前步内容渲染方位
+  renderContent?: (currentStep: number) => React.ReactNode; // 当前步渲染内容
+  beforeForward?: (currentStep: number) => void; // 上一步的回调
+  beforeBack?: (currentStep: number) => void; // 下一步的回调
 }
 
-  
 export interface TourProps {
+  /**
+   * 直接指定显示第几步
+   */
   step?: number;
-
+  /**
+   * 每一步的配置
+   */
   steps: TourStepConfig[];
-
   getContainer?: () => HTMLElement;
-
+  /**
+   * 所有步骤完成后的回调
+   */
   onStepsEnd?: () => void;
 }
 
-export const Tour:FC<TourProps> = (props) => {
-  const {
-    step = 0,
-    steps,
-    onStepsEnd,
-    getContainer
-  } = props;
+export const Tour: FC<TourProps> = (props) => {
+  const { step = 0, steps, onStepsEnd, getContainer } = props;
 
   const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -83,18 +79,16 @@ export const Tour:FC<TourProps> = (props) => {
 
     const operation = (
       <div className={'tour-operation'}>
-        {
-          currentStep !== 0 && 
-            <Button
-                className={'back'}
-                onClick={() => back()}>
-                {'上一步'}
-            </Button>
-        }
+        {currentStep !== 0 && (
+          <Button className={'back'} onClick={() => back()}>
+            {'上一步'}
+          </Button>
+        )}
         <Button
           className={'forward'}
           type={'primary'}
-          onClick={() => forward()}>
+          onClick={() => forward()}
+        >
           {currentStep === steps.length - 1 ? '我知道了' : '下一步'}
         </Button>
       </div>
@@ -102,12 +96,15 @@ export const Tour:FC<TourProps> = (props) => {
 
     return (
       <Popover
-        content={<div>
+        content={
+          <div>
             {content}
             {operation}
-        </div>}
+          </div>
+        }
         open={true}
-        placement={getCurrentStep()?.placement}>
+        placement={getCurrentStep()?.placement}
+      >
         {wrapper}
       </Popover>
     );
@@ -116,18 +113,20 @@ export const Tour:FC<TourProps> = (props) => {
   const [, setRenderTick] = useState<number>(0);
 
   useEffect(() => {
-    setRenderTick(1)    
+    setRenderTick(1);
   }, []);
-  
-  if(!currentSelectedElement) {
+
+  if (!currentSelectedElement) {
     return null;
   }
 
-  const mask = <Mask
-    container={currentContainerElement}
-    element={currentSelectedElement}
-    renderMaskContent={(wrapper) => renderPopover(wrapper)}
-  />;
+  const mask = (
+    <Mask
+      container={currentContainerElement}
+      element={currentSelectedElement}
+      renderMaskContent={(wrapper) => renderPopover(wrapper)}
+    />
+  );
 
   return createPortal(mask, currentContainerElement);
-}
+};

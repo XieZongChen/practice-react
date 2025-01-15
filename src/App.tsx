@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import ColorPickerPanel from './components/ColorPickerPanel';
 import { Mask } from './components/Tour/Mask';
-import Popover from './components/Popover';
+import { Popover } from 'antd';
 
 function App() {
   return (
