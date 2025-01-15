@@ -14,6 +14,22 @@ export const Mask: React.FC<MaskProps> = (props) => {
   const [style, setStyle] = useState<CSSProperties>({});
 
   useEffect(() => {
+    // 保证 container 后 mask 会重新计算
+    const observer = new ResizeObserver(() => {
+      const style = getMaskStyle(
+        element,
+        container || document.documentElement
+      );
+
+      setStyle(style);
+    });
+    observer.observe(container || document.documentElement);
+    return () => {
+      observer.disconnect();
+    };
+  }, [container, element]);
+
+  useEffect(() => {
     if (!element) {
       return;
     }
