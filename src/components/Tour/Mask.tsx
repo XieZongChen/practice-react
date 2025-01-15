@@ -1,10 +1,11 @@
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { getMaskStyle } from './getMaskStyle';
+import './index.scss';
 
 interface MaskProps {
   element: HTMLElement; // 目标元素
   container?: HTMLElement; // 遮罩层所在容器
-  renderMaskContent?: (wrapper: React.ReactNode) => React.ReactNode;
+  renderMaskContent?: (wrapper: React.ReactNode) => React.ReactNode; // 遮罩上的标示内容渲染函数
 }
 
 export const Mask: React.FC<MaskProps> = (props) => {
@@ -33,6 +34,7 @@ export const Mask: React.FC<MaskProps> = (props) => {
       return null;
     }
     return renderMaskContent(
+      // 将一个宽高为 100% 的 div 暴露出去，外部就可以用它来加 Popover 或者其他内容
       <div
         className={'mask-content'}
         style={{ width: '100%', height: '100%' }}
