@@ -42,6 +42,8 @@ export const Tour: FC<TourProps> = (props) => {
 
   const currentContainerElement = getContainer?.() || document.documentElement;
 
+  const [done, setDone] = useState(false);
+
   const getCurrentStep = () => {
     return steps[currentStep];
   };
@@ -60,6 +62,7 @@ export const Tour: FC<TourProps> = (props) => {
   const forward = async () => {
     if (currentStep === steps.length - 1) {
       await onStepsEnd?.();
+      setDone(true)
       return;
     }
 
@@ -125,7 +128,7 @@ export const Tour: FC<TourProps> = (props) => {
     setRenderTick(1);
   }, []);
 
-  if (!currentSelectedElement) {
+  if (!currentSelectedElement || done) {
     // 第一次渲染的时候，元素是 null，触发重新渲染之后，就会渲染下面的 Mask 了
     return null;
   }
