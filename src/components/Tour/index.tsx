@@ -49,6 +49,7 @@ export const Tour: FC<TourProps> = (props) => {
     }
 
     const { beforeBack } = getCurrentStep();
+    // 切换下一步前调用回调函数，需要做异步处理
     await beforeBack?.(currentStep);
     setCurrentStep(currentStep - 1);
   };
@@ -60,6 +61,7 @@ export const Tour: FC<TourProps> = (props) => {
     }
 
     const { beforeForward } = getCurrentStep();
+    // 切换上一步前调用回调函数，需要做异步处理
     await beforeForward?.(currentStep);
     setCurrentStep(currentStep + 1);
   };
