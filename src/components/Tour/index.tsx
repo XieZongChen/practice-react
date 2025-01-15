@@ -118,10 +118,15 @@ export const Tour: FC<TourProps> = (props) => {
   const [, setRenderTick] = useState<number>(0);
 
   useEffect(() => {
+    /**
+     * 在 dom 渲染完之后，触发重新渲染
+     * 让元素渲染完成后再给其加上标示
+     */
     setRenderTick(1);
   }, []);
 
   if (!currentSelectedElement) {
+    // 第一次渲染的时候，元素是 null，触发重新渲染之后，就会渲染下面的 Mask 了
     return null;
   }
 
