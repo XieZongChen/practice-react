@@ -1,6 +1,7 @@
 import { FC, useRef, ChangeEvent, PropsWithChildren, useState } from 'react';
 import axios from 'axios';
 import UploadList, { UploadFile } from './UploadList';
+import Dragger from './Dragger';
 import './index.scss';
 
 export interface UploadProps extends PropsWithChildren {
@@ -29,6 +30,10 @@ export interface UploadProps extends PropsWithChildren {
    * 是否多选上传
    */
   multiple?: boolean;
+  /**
+   * 是否可以拖拽上传
+   */
+  drag?: boolean;
   /**
    * 传之前的回调，如果返回 false 就不上传，也可以返回 promise，比如在服务端校验的时候，等 resolve 之后才会上传
    */
@@ -64,6 +69,7 @@ export const Upload: FC<UploadProps> = (props) => {
     withCredentials,
     accept,
     multiple,
+    drag,
     beforeUpload,
     onProgress,
     onSuccess,
@@ -197,7 +203,17 @@ export const Upload: FC<UploadProps> = (props) => {
   return (
     <div className='upload-component'>
       <div className='upload-input' onClick={handleClick}>
-        {children}
+        {drag ? (
+          <Dragger
+            onFile={(files) => {
+              uploadFiles(files);
+            }}
+          >
+            {children}
+          </Dragger>
+        ) : (
+          children
+        )}
         {/* 为了样式，将此 input 隐藏，由 upload-input 的 handleClick 触发上传 */}
         <input
           className='upload-file-input'

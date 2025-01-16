@@ -6,6 +6,7 @@ const props: UploadProps = {
   name: 'file',
   action: 'https://www.baidu.com',
   headers: {},
+  drag: true,
   beforeUpload(file) {
     console.log('beforeUpload', file);
     return true;
