@@ -4,12 +4,30 @@ import axios from 'axios';
 import './index.scss';
 
 export interface UploadProps extends PropsWithChildren {
+  /**
+   * 上传的 url
+   */
   action: string;
+  /**
+   * 上传的请求头
+   */
   headers?: Record<string, any>;
+  /**
+   * 文件表单字段名
+   */
   name?: string;
+  /**
+   * 上传携带数据
+   */
   data?: Record<string, any>;
   withCredentials?: boolean;
+  /**
+   * 文件格式
+   */
   accept?: string;
+  /**
+   * 是否多选上传
+   */
   multiple?: boolean;
 }
 
@@ -74,6 +92,7 @@ export const Upload: FC<UploadProps> = (props) => {
     <div className='upload-component'>
       <div className='upload-input' onClick={handleClick}>
         {children}
+        {/* 为了样式，将此 input 隐藏，由 upload-input 的 handleClick 触发上传 */}
         <input
           className='upload-file-input'
           type='file'
