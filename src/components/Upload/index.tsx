@@ -1,32 +1,7 @@
-import { FC, useRef, ChangeEvent, PropsWithChildren } from 'react';
+import { FC, useRef, ChangeEvent, PropsWithChildren, useState } from 'react';
 import axios from 'axios';
 import UploadList, { UploadFile } from './UploadList';
-
 import './index.scss';
-
-const fileList: UploadFile[] = [
-  {
-    uid: '11',
-    size: 111,
-    name: 'xxxx',
-    status: 'uploading',
-    percent: 50,
-  },
-  {
-    uid: '22',
-    size: 111,
-    name: 'yyy',
-    status: 'success',
-    percent: 50,
-  },
-  {
-    uid: '33',
-    size: 111,
-    name: 'zzz',
-    status: 'error',
-    percent: 50,
-  },
-];
 
 export interface UploadProps extends PropsWithChildren {
   /**
@@ -74,6 +49,10 @@ export interface UploadProps extends PropsWithChildren {
    * 上传状态改变时的回调
    */
   onChange?: (file: File) => void;
+  /**
+   * 文件列表删除的回调
+   */
+  onRemove?: (file: UploadFile) => void;
 }
 
 export const Upload: FC<UploadProps> = (props) => {
@@ -90,10 +69,37 @@ export const Upload: FC<UploadProps> = (props) => {
     onSuccess,
     onError,
     onChange,
+    onRemove,
     children,
   } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
+
+  const [fileList, setFileList] = useState<Array<UploadFile>>([]);
+
+  const updateFileList = (
+    updateFile: UploadFile,
+    updateObj: Partial<UploadFile>
+  ) => {
+    setFileList((prevList: UploadFile[]) => {
+      return prevList.map((file) => {
+        if (file.uid === updateFile.uid) {
+          return { ...file, ...updateObj };
+        } else {
+          return file;
+        }
+      });
+    });
+  };
+
+  const handleRemove = (file: UploadFile) => {
+    setFileList((prevList: UploadFile[]) => {
+      return prevList.filter((item) => item.uid !== file.uid);
+    });
+    if (onRemove) {
+      onRemove(file);
+    }
+  };
 
   const handleClick = () => {
     if (fileInput.current) {
@@ -131,6 +137,18 @@ export const Upload: FC<UploadProps> = (props) => {
   };
 
   const post = (file: File) => {
+    const uploadFile: UploadFile = {
+      uid: Date.now() + 'upload-file',
+      status: 'ready',
+      name: file.name,
+      size: file.size,
+      percent: 0,
+      raw: file,
+    };
+    setFileList((prevList: UploadFile[]) => {
+      return [uploadFile, ...prevList];
+    });
+
     const formData = new FormData();
 
     formData.append(name || 'file', file);
@@ -151,6 +169,11 @@ export const Upload: FC<UploadProps> = (props) => {
           // 进度需要用已上传和总数算出
           const percentage = Math.round((e.loaded * 100) / e.total!) || 0;
           if (percentage < 100) {
+            updateFileList(uploadFile, {
+              percent: percentage,
+              status: 'uploading',
+            });
+
             if (onProgress) {
               onProgress(percentage, file);
             }
@@ -158,10 +181,14 @@ export const Upload: FC<UploadProps> = (props) => {
         },
       })
       .then((resp) => {
+        updateFileList(uploadFile, { status: 'success', response: resp.data });
+
         onSuccess?.(resp.data, file);
         onChange?.(file);
       })
       .catch((err) => {
+        updateFileList(uploadFile, { status: 'error', error: err });
+
         onError?.(err, file);
         onChange?.(file);
       });
@@ -181,7 +208,7 @@ export const Upload: FC<UploadProps> = (props) => {
           multiple={multiple}
         />
       </div>
-      <UploadList fileList={fileList} onRemove={() => {}} />
+      <UploadList fileList={fileList} onRemove={handleRemove} />
     </div>
   );
 };
