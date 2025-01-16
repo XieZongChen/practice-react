@@ -21,6 +21,9 @@ export interface UploadProps extends PropsWithChildren {
    * 上传携带数据
    */
   data?: Record<string, any>;
+  /**
+   * 同 axios 的 withCredentials，请求为跨域类型时是否在请求中协带 cookie
+   */
   withCredentials?: boolean;
   /**
    * 文件格式
