@@ -29,6 +29,26 @@ export interface UploadProps extends PropsWithChildren {
    * 是否多选上传
    */
   multiple?: boolean;
+  /**
+   * 传之前的回调，如果返回 false 就不上传，也可以返回 promise，比如在服务端校验的时候，等 resolve 之后才会上传
+   */
+  beforeUpload?: (file: File) => boolean | Promise<File>;
+  /**
+   * 进度更新时的回调，可以拿到进度
+   */
+  onProgress?: (percentage: number, file: File) => void;
+  /**
+   * 上传成功时的回调
+   */
+  onSuccess?: (data: any, file: File) => void;
+  /**
+   * 上传失败时的回调
+   */
+  onError?: (err: any, file: File) => void;
+  /**
+   * 上传状态改变时的回调
+   */
+  onChange?: (file: File) => void;
 }
 
 export const Upload: FC<UploadProps> = (props) => {
@@ -40,6 +60,11 @@ export const Upload: FC<UploadProps> = (props) => {
     withCredentials,
     accept,
     multiple,
+    beforeUpload,
+    onProgress,
+    onSuccess,
+    onError,
+    onChange,
     children,
   } = props;
 
@@ -65,7 +90,18 @@ export const Upload: FC<UploadProps> = (props) => {
   const uploadFiles = (files: FileList) => {
     const postFiles = Array.from(files);
     postFiles.forEach((file) => {
-      post(file);
+      if (!beforeUpload) {
+        post(file);
+      } else {
+        const result = beforeUpload(file);
+        if (result && result instanceof Promise) {
+          result.then((processedFile) => {
+            post(processedFile);
+          });
+        } else if (result !== false) {
+          post(file);
+        }
+      }
     });
   };
 
@@ -79,13 +115,31 @@ export const Upload: FC<UploadProps> = (props) => {
       });
     }
 
-    axios.post(action, formData, {
-      headers: {
-        ...headers,
-        'Content-Type': 'multipart/form-data',
-      },
-      withCredentials,
-    });
+    axios
+      .post(action, formData, {
+        headers: {
+          ...headers,
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials,
+        onUploadProgress: (e) => {
+          // 进度需要用已上传和总数算出
+          const percentage = Math.round((e.loaded * 100) / e.total!) || 0;
+          if (percentage < 100) {
+            if (onProgress) {
+              onProgress(percentage, file);
+            }
+          }
+        },
+      })
+      .then((resp) => {
+        onSuccess?.(resp.data, file);
+        onChange?.(file);
+      })
+      .catch((err) => {
+        onError?.(err, file);
+        onChange?.(file);
+      });
   };
 
   return (
