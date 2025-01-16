@@ -1,7 +1,32 @@
 import { FC, useRef, ChangeEvent, PropsWithChildren } from 'react';
 import axios from 'axios';
+import UploadList, { UploadFile } from './UploadList';
 
 import './index.scss';
+
+const fileList: UploadFile[] = [
+  {
+    uid: '11',
+    size: 111,
+    name: 'xxxx',
+    status: 'uploading',
+    percent: 50,
+  },
+  {
+    uid: '22',
+    size: 111,
+    name: 'yyy',
+    status: 'success',
+    percent: 50,
+  },
+  {
+    uid: '33',
+    size: 111,
+    name: 'zzz',
+    status: 'error',
+    percent: 50,
+  },
+];
 
 export interface UploadProps extends PropsWithChildren {
   /**
@@ -156,6 +181,7 @@ export const Upload: FC<UploadProps> = (props) => {
           multiple={multiple}
         />
       </div>
+      <UploadList fileList={fileList} onRemove={() => {}} />
     </div>
   );
 };
