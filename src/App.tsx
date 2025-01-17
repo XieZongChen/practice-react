@@ -1,35 +1,53 @@
 import React, { useRef } from 'react';
-import { Button, Flex } from 'antd';
-import Upload, { UploadProps } from './components/Upload';
-
-const props: UploadProps = {
-  name: 'file',
-  action: 'https://www.baidu.com',
-  headers: {},
-  drag: true,
-  beforeUpload(file) {
-    console.log('beforeUpload', file);
-    return true;
-  },
-  onSuccess(ret) {
-    console.log('onSuccess', ret);
-  },
-  onError(err) {
-    console.log('onError', err);
-  },
-  onProgress(percentage, file) {
-    console.log('onProgress', percentage);
-  },
-  onChange(file) {
-    console.log('onChange', file);
-  },
-};
+import { Button, Checkbox, Input } from 'antd';
+import Form from './components/Form';
 
 function App() {
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+
   return (
-    <Upload {...props}>
-      <Button>Test Upload</Button>
-    </Upload>
+    <Form
+      initialValues={{ remember: true, username: 'test-init' }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    >
+      <Form.Item
+        label='Username'
+        name='username'
+        rules={[
+          { required: true, message: '请输入用户名!' },
+          { max: 6, message: '长度不能大于 6' },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label='Password'
+        name='password'
+        rules={[{ required: true, message: '请输入密码!' }]}
+      >
+        <Input.TextArea />
+      </Form.Item>
+
+      <Form.Item name='remember' valuePropName='checked'>
+        <Checkbox>记住我</Checkbox>
+      </Form.Item>
+
+      <Form.Item>
+        <div>
+          <Button type='primary' htmlType='submit'>
+            登录
+          </Button>
+        </div>
+      </Form.Item>
+    </Form>
   );
 }
 
