@@ -1,8 +1,7 @@
-import Form from '@/components/Form';
-import { FormProps, FormRefApi } from '@/components/Form/Form';
+import { FC, useRef } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button, Checkbox, Input } from 'antd';
-import { FC, useRef } from 'react';
+import Form, { FormProps, FormRefApi } from '@/components/Form';
 
 const RenderForm: FC = (args: FormProps) => {
   const form = useRef<FormRefApi>(null);

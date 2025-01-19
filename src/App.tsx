@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, Checkbox, Input } from 'antd';
-import Form from './components/Form';
-import { FormRefApi } from './components/Form/Form';
+import Form, { FormRefApi } from './components/Form';
 
 function App() {
   const form = useRef<FormRefApi>(null);
