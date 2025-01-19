@@ -1,8 +1,11 @@
 import React, { useRef } from 'react';
 import { Button, Checkbox, Input } from 'antd';
 import Form from './components/Form';
+import { FormRefApi } from './components/Form/Form';
 
 function App() {
+  const form = useRef<FormRefApi>(null);
+
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -12,42 +15,53 @@ function App() {
   };
 
   return (
-    <Form
-      initialValues={{ remember: true, username: 'test-init' }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <Form.Item
-        label='Username'
-        name='username'
-        rules={[
-          { required: true, message: '请输入用户名!' },
-          { max: 6, message: '长度不能大于 6' },
-        ]}
+    <>
+      <Form
+        ref={form}
+        initialValues={{ remember: true, username: 'test-init' }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
       >
-        <Input />
-      </Form.Item>
+        <Form.Item
+          label='Username'
+          name='username'
+          rules={[
+            { required: true, message: '请输入用户名!' },
+            { max: 6, message: '长度不能大于 6' },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Form.Item
-        label='Password'
-        name='password'
-        rules={[{ required: true, message: '请输入密码!' }]}
+        <Form.Item
+          label='Password'
+          name='password'
+          rules={[{ required: true, message: '请输入密码!' }]}
+        >
+          <Input.TextArea />
+        </Form.Item>
+
+        <Form.Item name='remember' valuePropName='checked'>
+          <Checkbox>记住我</Checkbox>
+        </Form.Item>
+
+        <Form.Item>
+          <div>
+            <Button type='primary' htmlType='submit'>
+              登录
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+      <Button
+        type='primary'
+        onClick={() => {
+          console.log(form.current?.getFieldsValue());
+        }}
       >
-        <Input.TextArea />
-      </Form.Item>
-
-      <Form.Item name='remember' valuePropName='checked'>
-        <Checkbox>记住我</Checkbox>
-      </Form.Item>
-
-      <Form.Item>
-        <div>
-          <Button type='primary' htmlType='submit'>
-            登录
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
+        打印表单值
+      </Button>
+    </>
   );
 }
 

@@ -4,6 +4,8 @@ import React, {
   useRef,
   FormEvent,
   ReactNode,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 import classNames from 'classnames';
 import FormContext from './FormContext';
@@ -17,7 +19,12 @@ export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {
   children?: ReactNode;
 }
 
-const Form = (props: FormProps) => {
+export interface FormRefApi {
+  getFieldsValue: () => Record<string, any>;
+  setFieldsValue: (values: Record<string, any>) => void;
+}
+
+const Form = forwardRef<FormRefApi, FormProps>((props: FormProps, ref) => {
   const {
     className,
     style,
@@ -31,6 +38,27 @@ const Form = (props: FormProps) => {
   const [values, setValues] = useState<Record<string, any>>(
     initialValues || {}
   );
+
+  /**
+   * 使用 ref 仿照 antd 的 useForm hook 让用户可以操作 store
+   * 实现 useForm 需要让 store 与组件分离
+   * 用 ref 算是最小成本模拟核心功能
+   */
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        getFieldsValue() {
+          return values;
+        },
+        setFieldsValue(fieldValues) {
+          setValues({ ...values, ...fieldValues });
+        },
+      };
+    },
+    []
+  );
+
   /**
    * ref 的值保存在 current 属性上，修改它不会触发重新渲染
    * errors、validator 这种就是不需要触发重新渲染的数据，所以用 useRef
@@ -84,6 +112,6 @@ const Form = (props: FormProps) => {
       </form>
     </FormContext.Provider>
   );
-};
+});
 
 export default Form;
