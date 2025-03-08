@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Icon, IconProps } from '@/components/Icon';
-import { IconAdd } from '@/components/Icon/icons/IconAdd';
+import { Icon, IconProps } from '@/components/icon';
+import { IconAdd } from '@/components/icon/icons/IconAdd';
 
 const renderIcon = (args: IconProps) => {
   return <IconAdd {...args} />;

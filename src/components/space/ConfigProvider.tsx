@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { SizeType } from '@/components/Space';
+import { SizeType } from '@/components/space';
 
 export interface ConfigContextType {
   space?: {

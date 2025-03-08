@@ -3,8 +3,6 @@ import {
   FC,
   forwardRef,
   ReactNode,
-  useEffect,
-  useImperativeHandle,
   useMemo,
 } from 'react';
 import useStore from './useStore';
@@ -52,7 +50,7 @@ export interface MessageProps {
 }
 
 // todo: message 组件需要参考 arco 或者 antd 进行优化 
-export const MessageProvider = forwardRef<MessageRef, {}>((props, ref) => {
+export const MessageProvider = forwardRef<MessageRef, {}>((_, ref) => {
   const { messageList, add, update, remove, clearAll } = useStore('top');
 
   if ('current' in ref!) {

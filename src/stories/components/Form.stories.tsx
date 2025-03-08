@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button, Checkbox, Input } from 'antd';
 import Form, { FormProps, FormRefApi } from '@/components/Form';
 
-const RenderForm: FC = (args: FormProps) => {
+const RenderForm: FC = (_: FormProps) => {
   const form = useRef<FormRefApi>(null);
 
   const onFinish = (values: any) => {

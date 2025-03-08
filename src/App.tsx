@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Button, Checkbox, Input } from 'antd';
 import Form, { FormRefApi } from './components/Form';
 

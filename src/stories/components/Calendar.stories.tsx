@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Calendar, { CalendarProps } from '@/components/Calendar';
+import Calendar, { CalendarProps } from '@/components/calendar';
 import dayjs from 'dayjs';
 
 const meta = {

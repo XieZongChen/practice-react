@@ -13,7 +13,7 @@ const renderMutateObserver = (args: MutationObserverProps) => {
     setTimeout(() => setClassName('bbb'), 2000);
   }, []);
 
-  const callback = function (mutationsList: MutationRecord[]) {
+  const callback = function (_: MutationRecord[]) {
     alert('触发回调');
   };
   return (

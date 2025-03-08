@@ -95,7 +95,7 @@ function useColorDrag(
         onDragChange?.(calcOffset);
     };
 
-    const onDragStop: EventHandle = e => {
+    const onDragStop: EventHandle = () => {
         // 拖拽结束后删除绑定的鼠标监听事件
         document.removeEventListener('mousemove', onDragMove);
         document.removeEventListener('mouseup', onDragStop);
