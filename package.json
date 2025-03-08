@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "book": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build && mv storybook-static docs"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^4.1.0",
